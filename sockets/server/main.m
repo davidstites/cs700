@@ -67,9 +67,13 @@ int main(int argc, const char * argv[]) {
       
       struct socks s;
       
-      printf("test 2");
       while((cnt = recv(client_sock, &s, sizeof(struct socks), 0)) > 0) {
-        printf("test");
+        printf("timestamp: %llu\n", s.timestamp);
+        printf("timestamp: %02x:%02x:%02x:%02x:%02x:%02x\n", s.dst[0], s.dst[1], s.dst[2], s.dst[3], s.dst[4], s.dst[5]);
+        printf("timestamp: %02x:%02x:%02x:%02x:%02x:%02x\n", s.src[0], s.src[1], s.src[2], s.src[3], s.src[4], s.src[5]);
+        printf("timestamp: %02x:%02x:%02x:%02x:%02x:%02x\n", s.bssid[0], s.bssid[1], s.bssid[2], s.bssid[3], s.bssid[4], s.bssid[5]);
+        printf("station: %i\n", s.stn_id);
+        printf("rssi: %d\n", s.rssi);
         //printf("Server got message: %s\n", buf);
       }
       
