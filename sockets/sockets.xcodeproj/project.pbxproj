@@ -1,0 +1,338 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B424B1A1160E813800F98968 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B424B1A0160E813800F98968 /* main.m */; };
+		B424B1A5160E813800F98968 /* server.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B424B1A4160E813800F98968 /* server.1 */; };
+		B424B1B2160E813E00F98968 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B424B1B1160E813E00F98968 /* main.m */; };
+		B424B1B6160E813E00F98968 /* client.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B424B1B5160E813E00F98968 /* client.1 */; };
+		B424B1BB16100F0300F98968 /* socks.h in Sources */ = {isa = PBXBuildFile; fileRef = B424B1BA16100EF900F98968 /* socks.h */; };
+		B424B1BC16100F0900F98968 /* socks.h in Sources */ = {isa = PBXBuildFile; fileRef = B424B1BA16100EF900F98968 /* socks.h */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		B424B19A160E813800F98968 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				B424B1A5160E813800F98968 /* server.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+		B424B1AB160E813E00F98968 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+				B424B1B6160E813E00F98968 /* client.1 in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		B424B19C160E813800F98968 /* server */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = server; sourceTree = BUILT_PRODUCTS_DIR; };
+		B424B1A0160E813800F98968 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B424B1A3160E813800F98968 /* server-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "server-Prefix.pch"; sourceTree = "<group>"; };
+		B424B1A4160E813800F98968 /* server.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = server.1; sourceTree = "<group>"; };
+		B424B1AD160E813E00F98968 /* client */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = client; sourceTree = BUILT_PRODUCTS_DIR; };
+		B424B1B1160E813E00F98968 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B424B1B4160E813E00F98968 /* client-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "client-Prefix.pch"; sourceTree = "<group>"; };
+		B424B1B5160E813E00F98968 /* client.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = client.1; sourceTree = "<group>"; };
+		B424B1BA16100EF900F98968 /* socks.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = socks.h; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B424B199160E813800F98968 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B424B1AA160E813E00F98968 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B424B17B160E811400F98968 = {
+			isa = PBXGroup;
+			children = (
+				B424B1BA16100EF900F98968 /* socks.h */,
+				B424B19F160E813800F98968 /* server */,
+				B424B1B0160E813E00F98968 /* client */,
+				B424B189160E811400F98968 /* Frameworks */,
+				B424B187160E811400F98968 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		B424B187160E811400F98968 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B424B19C160E813800F98968 /* server */,
+				B424B1AD160E813E00F98968 /* client */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B424B189160E811400F98968 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		B424B19F160E813800F98968 /* server */ = {
+			isa = PBXGroup;
+			children = (
+				B424B1A0160E813800F98968 /* main.m */,
+				B424B1A4160E813800F98968 /* server.1 */,
+				B424B1A2160E813800F98968 /* Supporting Files */,
+			);
+			path = server;
+			sourceTree = "<group>";
+		};
+		B424B1A2160E813800F98968 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B424B1A3160E813800F98968 /* server-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		B424B1B0160E813E00F98968 /* client */ = {
+			isa = PBXGroup;
+			children = (
+				B424B1B1160E813E00F98968 /* main.m */,
+				B424B1B5160E813E00F98968 /* client.1 */,
+				B424B1B3160E813E00F98968 /* Supporting Files */,
+			);
+			path = client;
+			sourceTree = "<group>";
+		};
+		B424B1B3160E813E00F98968 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				B424B1B4160E813E00F98968 /* client-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B424B19B160E813800F98968 /* server */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B424B1A6160E813800F98968 /* Build configuration list for PBXNativeTarget "server" */;
+			buildPhases = (
+				B424B198160E813800F98968 /* Sources */,
+				B424B199160E813800F98968 /* Frameworks */,
+				B424B19A160E813800F98968 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = server;
+			productName = server;
+			productReference = B424B19C160E813800F98968 /* server */;
+			productType = "com.apple.product-type.tool";
+		};
+		B424B1AC160E813E00F98968 /* client */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B424B1B7160E813E00F98968 /* Build configuration list for PBXNativeTarget "client" */;
+			buildPhases = (
+				B424B1A9160E813E00F98968 /* Sources */,
+				B424B1AA160E813E00F98968 /* Frameworks */,
+				B424B1AB160E813E00F98968 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = client;
+			productName = client;
+			productReference = B424B1AD160E813E00F98968 /* client */;
+			productType = "com.apple.product-type.tool";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B424B17D160E811400F98968 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0450;
+				ORGANIZATIONNAME = "David R. Stites";
+			};
+			buildConfigurationList = B424B180160E811400F98968 /* Build configuration list for PBXProject "sockets" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = B424B17B160E811400F98968;
+			productRefGroup = B424B187160E811400F98968 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B424B19B160E813800F98968 /* server */,
+				B424B1AC160E813E00F98968 /* client */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B424B198160E813800F98968 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B424B1BB16100F0300F98968 /* socks.h in Sources */,
+				B424B1A1160E813800F98968 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		B424B1A9160E813E00F98968 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B424B1BC16100F0900F98968 /* socks.h in Sources */,
+				B424B1B2160E813E00F98968 /* main.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		B424B193160E811400F98968 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		B424B194160E811400F98968 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.8;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+		B424B1A7160E813800F98968 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "server/server-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		B424B1A8160E813800F98968 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "server/server-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		B424B1B8160E813E00F98968 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "client/client-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		B424B1B9160E813E00F98968 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "client/client-Prefix.pch";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B424B180160E811400F98968 /* Build configuration list for PBXProject "sockets" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B424B193160E811400F98968 /* Debug */,
+				B424B194160E811400F98968 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B424B1A6160E813800F98968 /* Build configuration list for PBXNativeTarget "server" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B424B1A7160E813800F98968 /* Debug */,
+				B424B1A8160E813800F98968 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+		B424B1B7160E813E00F98968 /* Build configuration list for PBXNativeTarget "client" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B424B1B8160E813E00F98968 /* Debug */,
+				B424B1B9160E813E00F98968 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B424B17D160E811400F98968 /* Project object */;
+}
