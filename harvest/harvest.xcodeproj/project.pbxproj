@@ -106,7 +106,7 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		B44516C416110CC9004A1A3C /* Common */ = {
+		B44516C416110CC9004A1A3C /* common */ = {
 			isa = PBXGroup;
 			children = (
 				B44516C316110939004A1A3C /* common.h */,
@@ -114,7 +114,7 @@
 				B44516C01610DA65004A1A3C /* list.c */,
 				B44516BF1610D581004A1A3C /* harvest.h */,
 			);
-			name = Common;
+			name = common;
 			sourceTree = "<group>";
 		};
 		B44DDBBD160D4D1F00A6C963 /* sqlite */ = {
@@ -128,7 +128,7 @@
 		B497EBAD1608F28D00BF3C87 = {
 			isa = PBXGroup;
 			children = (
-				B44516C416110CC9004A1A3C /* Common */,
+				B44516C416110CC9004A1A3C /* common */,
 				B497EBBE1608F28E00BF3C87 /* harvestd */,
 				B44516B41610D53A004A1A3C /* stored */,
 				B497EBBB1608F28E00BF3C87 /* Frameworks */,
@@ -272,7 +272,7 @@
 		B44516BB1610D53A004A1A3C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "stored/stored-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -282,7 +282,7 @@
 		B44516BC1610D53A004A1A3C /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "stored/stored-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -293,7 +293,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -322,7 +322,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
-				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
 				CLANG_CXX_LIBRARY = "libc++";
 				CLANG_WARN_EMPTY_BODY = YES;
@@ -343,7 +343,7 @@
 		B497EBC81608F28E00BF3C87 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "harvest/harvest-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -353,7 +353,7 @@
 		B497EBC91608F28E00BF3C87 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "harvest/harvest-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";

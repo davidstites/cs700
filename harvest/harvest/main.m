@@ -145,7 +145,8 @@ pcap_t *openDevice(pcap_if_t *dev) {
 }
 
 void send_harvest(harvest *h) {
-#ifdef PRINTING
+  //#ifdef PRINTING
+  printf("===============================\n");
   printf("Timestamp: %llu\n", h->timestamp);
   printf("Message type: %d\n", h->msg_type);
   printf("Message type: %llu\n", h->msg_id);
@@ -154,15 +155,10 @@ void send_harvest(harvest *h) {
   printf("DST: %02x:%02x:%02x:%02x:%02x:%02x\n", h->dst[0], h->dst[1], h->dst[2], h->dst[3], h->dst[4], h->dst[5]);
   printf("SRC: %02x:%02x:%02x:%02x:%02x:%02x\n",  h->src[0],  h->src[1],  h->src[2],  h->src[3], h->src[4], h->src[5]);
   printf("BSSID: %02x:%02x:%02x:%02x:%02x:%02x\n", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
-  printf("SSID: %s", h->ssid);
-#endif
+  printf("SSID: %s\n", h->ssid);
+  //#endif
   
-  // DRS does this need to sit in a loop?
-  cnt = send(sock, &remote, sizeof(struct harvest), 0);
-  
-  /*while((cnt = read(sock, buf, strlen(buf))) > 0) {
-   printf("Client got message: %s\n", buf);
-   }*/
+  cnt = send(sock, h, sizeof(struct harvest), 0);
 }
 
 int setup_socks() {
@@ -214,7 +210,8 @@ void *store_packets(pthread_mutex_t lock) {
     }
     else {
       pthread_mutex_unlock(&lock);
-      pthread_yield_np();
+      //DRS
+      //pthread_yield_np();
     }
   }
   

@@ -62,17 +62,18 @@ int main(int argc, const char * argv[]) {
     if(fork() == 0) {
       close(server_sock);
       
-      struct harvest *h = NULL;
-      while((cnt = recv(client_sock, h, sizeof(struct harvest), 0)) > 0) {
-        printf("Timestamp: %llu\n", h->timestamp);
-        printf("Message type: %d\n", h->msg_type);
-        printf("Message type: %llu\n", h->msg_id);
-        printf("Message type: %i\n", h->rssi);
-        printf("Message type: %i\n", h->stn_id);
-        printf("DST: %02x:%02x:%02x:%02x:%02x:%02x\n", h->dst[0], h->dst[1], h->dst[2], h->dst[3], h->dst[4], h->dst[5]);
-        printf("SRC: %02x:%02x:%02x:%02x:%02x:%02x\n",  h->src[0],  h->src[1],  h->src[2],  h->src[3], h->src[4], h->src[5]);
-        printf("BSSID: %02x:%02x:%02x:%02x:%02x:%02x\n", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
-        printf("SSID: %s", h->ssid);
+      struct harvest h;
+      while((cnt = recv(client_sock, &h, sizeof(struct harvest), 0)) > 0) {
+        printf("===============================\n");
+        printf("Timestamp: %llu\n", h.timestamp);
+        printf("Message type: %d\n", h.msg_type);
+        printf("Message ID: %llu\n", h.msg_id);
+        printf("Message RSSI: %i\n", h.rssi);
+        printf("Station ID: %i\n", h.stn_id);
+        printf("DST: %02x:%02x:%02x:%02x:%02x:%02x\n", h.dst[0], h.dst[1], h.dst[2], h.dst[3], h.dst[4], h.dst[5]);
+        printf("SRC: %02x:%02x:%02x:%02x:%02x:%02x\n",  h.src[0],  h.src[1],  h.src[2],  h.src[3], h.src[4], h.src[5]);
+        printf("BSSID: %02x:%02x:%02x:%02x:%02x:%02x\n", h.bssid[0], h.bssid[1], h.bssid[2], h.bssid[3], h.bssid[4], h.bssid[5]);
+        printf("SSID: %s\n", h.ssid);
       }
       
       close(client_sock);
