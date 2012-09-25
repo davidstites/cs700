@@ -10,6 +10,11 @@
 		B44516B61610D53A004A1A3C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B44516B51610D53A004A1A3C /* main.m */; };
 		B44516BA1610D53A004A1A3C /* stored.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B44516B91610D53A004A1A3C /* stored.1 */; };
 		B44516C11610DA65004A1A3C /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = B44516C01610DA65004A1A3C /* list.c */; };
+		B44516CF16112F4C004A1A3C /* common.h in Sources */ = {isa = PBXBuildFile; fileRef = B44516C316110939004A1A3C /* common.h */; };
+		B44516D016112F4C004A1A3C /* list.h in Sources */ = {isa = PBXBuildFile; fileRef = B44516C21610DA88004A1A3C /* list.h */; };
+		B44516D116112F4C004A1A3C /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = B44516C01610DA65004A1A3C /* list.c */; };
+		B44516D216112F4C004A1A3C /* harvest.h in Sources */ = {isa = PBXBuildFile; fileRef = B44516BF1610D581004A1A3C /* harvest.h */; };
+		B44516D316112F4C004A1A3C /* sqlite-driver.c in Sources */ = {isa = PBXBuildFile; fileRef = B44DDBBF160D4D3200A6C963 /* sqlite-driver.c */; };
 		B44DDBC0160D4D3200A6C963 /* sqlite-driver.c in Sources */ = {isa = PBXBuildFile; fileRef = B44DDBBF160D4D3200A6C963 /* sqlite-driver.c */; };
 		B497EBC01608F28E00BF3C87 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B497EBBF1608F28E00BF3C87 /* main.m */; };
 		B497EBC41608F28E00BF3C87 /* harvest.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B497EBC31608F28E00BF3C87 /* harvest.1 */; };
@@ -49,6 +54,7 @@
 		B44516C01610DA65004A1A3C /* list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = list.c; sourceTree = "<group>"; };
 		B44516C21610DA88004A1A3C /* list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = list.h; sourceTree = "<group>"; };
 		B44516C316110939004A1A3C /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
+		B44516D416112F6B004A1A3C /* sqlite-driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "sqlite-driver.h"; sourceTree = "<group>"; };
 		B44DDBBF160D4D3200A6C963 /* sqlite-driver.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "sqlite-driver.c"; sourceTree = "<group>"; };
 		B497EBB81608F28E00BF3C87 /* harvestd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = harvestd; sourceTree = BUILT_PRODUCTS_DIR; };
 		B497EBBF1608F28E00BF3C87 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -121,6 +127,7 @@
 			isa = PBXGroup;
 			children = (
 				B44DDBBF160D4D3200A6C963 /* sqlite-driver.c */,
+				B44516D416112F6B004A1A3C /* sqlite-driver.h */,
 			);
 			name = sqlite;
 			sourceTree = "<group>";
@@ -252,6 +259,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B44516CF16112F4C004A1A3C /* common.h in Sources */,
+				B44516D016112F4C004A1A3C /* list.h in Sources */,
+				B44516D116112F4C004A1A3C /* list.c in Sources */,
+				B44516D216112F4C004A1A3C /* harvest.h in Sources */,
+				B44516D316112F4C004A1A3C /* sqlite-driver.c in Sources */,
 				B44516B61610D53A004A1A3C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

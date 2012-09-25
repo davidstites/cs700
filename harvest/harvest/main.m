@@ -145,7 +145,7 @@ pcap_t *openDevice(pcap_if_t *dev) {
 }
 
 void send_harvest(harvest *h) {
-  //#ifdef PRINTING
+#ifdef PRINTING
   printf("===============================\n");
   printf("Timestamp: %llu\n", h->timestamp);
   printf("Message type: %d\n", h->msg_type);
@@ -156,7 +156,7 @@ void send_harvest(harvest *h) {
   printf("SRC: %02x:%02x:%02x:%02x:%02x:%02x\n",  h->src[0],  h->src[1],  h->src[2],  h->src[3], h->src[4], h->src[5]);
   printf("BSSID: %02x:%02x:%02x:%02x:%02x:%02x\n", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
   printf("SSID: %s\n", h->ssid);
-  //#endif
+#endif
   
   cnt = send(sock, h, sizeof(struct harvest), 0);
 }

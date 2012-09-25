@@ -6,6 +6,8 @@
 //  Copyright (c) 2012 David R. Stites. All rights reserved.
 //
 
+#include <sqlite3.h>
+#include <pthread.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -16,8 +18,12 @@
 
 #import "common.h"
 #import "harvest.h"
+#import "sqlite-driver.h"
 
-int main(int argc, const char * argv[]) {
+void *receive_packets(pthread_mutex_t lock);
+void *store_packets(pthread_mutex_t lock);
+
+void *receive_packets(pthread_mutex_t lock) {
   int server_sock;
   struct sockaddr server_address;
   
@@ -80,6 +86,40 @@ int main(int argc, const char * argv[]) {
       exit(0);
     }
   }
+}
+
+void *store_packets(pthread_mutex_t lock) {
+  // do sqlite things here
+}
+
+int main(int argc, const char * argv[]) {
+  pthread_t receive_thread;
+  pthread_t db_thread;
+  
+  pthread_mutex_t lock;
+  
+  pthread_mutex_init(&lock, NULL);
+  
+  // init the capture thread and storage threads
+  if(pthread_create(&receive_thread, NULL, receive_packets, &lock) != 0) {
+    pthread_mutex_destroy(&lock);
+    printf("could not create capture thread");
+    exit(1);
+  }
+  
+  if(pthread_create(&db_thread, NULL, store_packets, &lock) != 0) {
+    pthread_join(receive_thread, NULL);
+    pthread_mutex_destroy(&lock);
+    printf("could not create store thread");
+    exit(1);
+  }
+  
+  // wait forever for the capture thead
+  pthread_join(receive_thread, NULL);
+  pthread_join(db_thread, NULL);
+  
+  pthread_mutex_destroy(&lock);
+  
   return 0;
 }
 
