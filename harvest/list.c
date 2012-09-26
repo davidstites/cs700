@@ -44,13 +44,16 @@ node *insert_back(node *newNode, node *head) {
   return head;
 }
 
-node *remove_front(node *head, node *oldNode) {
+node *remove_front(node *head) {
   if(head == NULL) {
     return NULL;
   }
   
-  memcpy(oldNode, head, sizeof(node));
+  node *oldHead = head;
   head = head->next;
+  
+  free(oldHead->h);
+  free(oldHead);
   
   return head;
 }

@@ -145,18 +145,18 @@ pcap_t *openDevice(pcap_if_t *dev) {
 }
 
 void send_harvest(harvest *h) {
-#ifdef PRINTING
-  printf("===============================\n");
+  //#ifdef PRINTING
+  printf("===============================\nHARVEST\n");
   printf("Timestamp: %llu\n", h->timestamp);
   printf("Message type: %d\n", h->msg_type);
-  printf("Message type: %llu\n", h->msg_id);
-  printf("Message type: %i\n", h->rssi);
-  printf("Message type: %i\n", h->stn_id);
+  printf("Message ID: %llu\n", h->msg_id);
+  printf("Message RSSI: %i\n", h->rssi);
+  printf("Station ID: %i\n", h->stn_id);
   printf("DST: %02x:%02x:%02x:%02x:%02x:%02x\n", h->dst[0], h->dst[1], h->dst[2], h->dst[3], h->dst[4], h->dst[5]);
   printf("SRC: %02x:%02x:%02x:%02x:%02x:%02x\n",  h->src[0],  h->src[1],  h->src[2],  h->src[3], h->src[4], h->src[5]);
   printf("BSSID: %02x:%02x:%02x:%02x:%02x:%02x\n", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
   printf("SSID: %s\n", h->ssid);
-#endif
+  //#endif
   
   cnt = send(sock, h, sizeof(struct harvest), 0);
 }
@@ -192,19 +192,9 @@ void *store_packets(pthread_mutex_t lock) {
     pthread_mutex_lock(&lock);
 
     if(q->count > 0 && q->head != NULL) {
-      node *n = (node *)malloc(sizeof(node));
-      q->head = remove_front(q->head, n);
+      send_harvest(q->head->h);
+      q->head = remove_front(q->head);
       q->count--;
-      
-      send_harvest(n->h);
-      
-      // free all the things
-      if(n) {
-        if(n->h) {
-          free(n->h);
-        }
-        free(n);
-      }
       
       pthread_mutex_unlock(&lock);
     }
@@ -395,7 +385,8 @@ void *capture_process_packets(pthread_mutex_t lock) {
         printf("SSID: ");
 #endif
         
-        strncpy(h->ssid, (const char *)tag, len);
+        // DRS
+        //strncpy(h->ssid, (const char *)tag, len);
         
 #ifdef LOGGING
         printf("\n");
@@ -415,10 +406,10 @@ void *capture_process_packets(pthread_mutex_t lock) {
       
       pthread_mutex_unlock(&lock);
       
-      //#ifdef LOGGING
+      #ifdef LOGGING
       packets_captured++;
       printf("packets captured: %llu, queue count: %i\n", packets_captured, q->count);
-      //#endif
+      #endif
     }
   }
   

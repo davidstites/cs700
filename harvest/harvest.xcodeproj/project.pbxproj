@@ -10,12 +10,7 @@
 		B44516B61610D53A004A1A3C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B44516B51610D53A004A1A3C /* main.m */; };
 		B44516BA1610D53A004A1A3C /* stored.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B44516B91610D53A004A1A3C /* stored.1 */; };
 		B44516C11610DA65004A1A3C /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = B44516C01610DA65004A1A3C /* list.c */; };
-		B44516CF16112F4C004A1A3C /* common.h in Sources */ = {isa = PBXBuildFile; fileRef = B44516C316110939004A1A3C /* common.h */; };
-		B44516D016112F4C004A1A3C /* list.h in Sources */ = {isa = PBXBuildFile; fileRef = B44516C21610DA88004A1A3C /* list.h */; };
 		B44516D116112F4C004A1A3C /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = B44516C01610DA65004A1A3C /* list.c */; };
-		B44516D216112F4C004A1A3C /* harvest.h in Sources */ = {isa = PBXBuildFile; fileRef = B44516BF1610D581004A1A3C /* harvest.h */; };
-		B44516D316112F4C004A1A3C /* sqlite-driver.c in Sources */ = {isa = PBXBuildFile; fileRef = B44DDBBF160D4D3200A6C963 /* sqlite-driver.c */; };
-		B44DDBC0160D4D3200A6C963 /* sqlite-driver.c in Sources */ = {isa = PBXBuildFile; fileRef = B44DDBBF160D4D3200A6C963 /* sqlite-driver.c */; };
 		B497EBC01608F28E00BF3C87 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B497EBBF1608F28E00BF3C87 /* main.m */; };
 		B497EBC41608F28E00BF3C87 /* harvest.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B497EBC31608F28E00BF3C87 /* harvest.1 */; };
 		B497EBCB1608F2F600BF3C87 /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B497EBCA1608F2F600BF3C87 /* libpcap.dylib */; };
@@ -46,6 +41,7 @@
 
 /* Begin PBXFileReference section */
 		B4122DAA160BC1BC00C004B4 /* radiotap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = radiotap.h; sourceTree = "<group>"; };
+		B424B1C816114BBF00F98968 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		B44516B11610D53A004A1A3C /* stored */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stored; sourceTree = BUILT_PRODUCTS_DIR; };
 		B44516B51610D53A004A1A3C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B44516B81610D53A004A1A3C /* stored-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stored-Prefix.pch"; sourceTree = "<group>"; };
@@ -54,8 +50,6 @@
 		B44516C01610DA65004A1A3C /* list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = list.c; sourceTree = "<group>"; };
 		B44516C21610DA88004A1A3C /* list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = list.h; sourceTree = "<group>"; };
 		B44516C316110939004A1A3C /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
-		B44516D416112F6B004A1A3C /* sqlite-driver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "sqlite-driver.h"; sourceTree = "<group>"; };
-		B44DDBBF160D4D3200A6C963 /* sqlite-driver.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = "sqlite-driver.c"; sourceTree = "<group>"; };
 		B497EBB81608F28E00BF3C87 /* harvestd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = harvestd; sourceTree = BUILT_PRODUCTS_DIR; };
 		B497EBBF1608F28E00BF3C87 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B497EBC21608F28E00BF3C87 /* harvest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "harvest-Prefix.pch"; sourceTree = "<group>"; };
@@ -97,6 +91,7 @@
 		B44516B41610D53A004A1A3C /* stored */ = {
 			isa = PBXGroup;
 			children = (
+				B424B1C816114BBF00F98968 /* main.h */,
 				B44516B51610D53A004A1A3C /* main.m */,
 				B44516B91610D53A004A1A3C /* stored.1 */,
 				B44516B71610D53A004A1A3C /* Supporting Files */,
@@ -121,15 +116,6 @@
 				B44516BF1610D581004A1A3C /* harvest.h */,
 			);
 			name = common;
-			sourceTree = "<group>";
-		};
-		B44DDBBD160D4D1F00A6C963 /* sqlite */ = {
-			isa = PBXGroup;
-			children = (
-				B44DDBBF160D4D3200A6C963 /* sqlite-driver.c */,
-				B44516D416112F6B004A1A3C /* sqlite-driver.h */,
-			);
-			name = sqlite;
 			sourceTree = "<group>";
 		};
 		B497EBAD1608F28D00BF3C87 = {
@@ -165,7 +151,6 @@
 			children = (
 				B4EA7035160D3BAD001A11F7 /* main.h */,
 				B497EBBF1608F28E00BF3C87 /* main.m */,
-				B44DDBBD160D4D1F00A6C963 /* sqlite */,
 				B4EA7032160D3B66001A11F7 /* ieee80211 */,
 				B4122DAE160BC37B00C004B4 /* radiotap */,
 				B497EBC31608F28E00BF3C87 /* harvest.1 */,
@@ -259,11 +244,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B44516CF16112F4C004A1A3C /* common.h in Sources */,
-				B44516D016112F4C004A1A3C /* list.h in Sources */,
 				B44516D116112F4C004A1A3C /* list.c in Sources */,
-				B44516D216112F4C004A1A3C /* harvest.h in Sources */,
-				B44516D316112F4C004A1A3C /* sqlite-driver.c in Sources */,
 				B44516B61610D53A004A1A3C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -273,7 +254,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B497EBC01608F28E00BF3C87 /* main.m in Sources */,
-				B44DDBC0160D4D3200A6C963 /* sqlite-driver.c in Sources */,
 				B44516C11610DA65004A1A3C /* list.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -287,6 +267,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "stored/stored-Prefix.pch";
+				OTHER_LDFLAGS = "-lsqlite3";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -297,6 +278,7 @@
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "stored/stored-Prefix.pch";
+				OTHER_LDFLAGS = "-lsqlite3";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
@@ -382,6 +364,7 @@
 				B44516BC1610D53A004A1A3C /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B497EBB21608F28E00BF3C87 /* Build configuration list for PBXProject "harvest" */ = {
 			isa = XCConfigurationList;

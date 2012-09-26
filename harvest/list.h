@@ -28,6 +28,6 @@ typedef struct queue {
 
 node *create();
 node *insert_back(node *newNode, node *head);
-node *remove_front(node *head, node *oldNode);
+node *remove_front(node *head);
 
 #endif

@@ -6,22 +6,7 @@
 //  Copyright (c) 2012 David R. Stites. All rights reserved.
 //
 
-#include <sqlite3.h>
-#include <pthread.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <errno.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <sys/un.h>
-
-#import "common.h"
-#import "harvest.h"
-#import "sqlite-driver.h"
-
-void *receive_packets(pthread_mutex_t lock);
-void *store_packets(pthread_mutex_t lock);
+#import "main.h"
 
 void *receive_packets(pthread_mutex_t lock) {
   int server_sock;
@@ -90,6 +75,16 @@ void *receive_packets(pthread_mutex_t lock) {
 
 void *store_packets(pthread_mutex_t lock) {
   // do sqlite things here
+  
+  sqlite3 *db_handle = NULL;
+  
+  // DRS
+  if(sqlite3_open("/Users/dstites/addresses.sqlite", &db_handle) == SQLITE_OK) {
+    printf("opened sqlite database");
+  }
+  
+  sqlite3_close(db_handle);
+  return NULL;
 }
 
 int main(int argc, const char * argv[]) {
