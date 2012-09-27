@@ -42,6 +42,7 @@
 /* Begin PBXFileReference section */
 		B4122DAA160BC1BC00C004B4 /* radiotap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = radiotap.h; sourceTree = "<group>"; };
 		B424B1C816114BBF00F98968 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
+		B424B1CE1614080200F98968 /* dstites_sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dstites_sqlite.h; sourceTree = "<group>"; };
 		B44516B11610D53A004A1A3C /* stored */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stored; sourceTree = BUILT_PRODUCTS_DIR; };
 		B44516B51610D53A004A1A3C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B44516B81610D53A004A1A3C /* stored-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stored-Prefix.pch"; sourceTree = "<group>"; };
@@ -95,6 +96,7 @@
 				B44516B51610D53A004A1A3C /* main.m */,
 				B44516B91610D53A004A1A3C /* stored.1 */,
 				B44516B71610D53A004A1A3C /* Supporting Files */,
+				B424B1CE1614080200F98968 /* dstites_sqlite.h */,
 			);
 			path = stored;
 			sourceTree = "<group>";
