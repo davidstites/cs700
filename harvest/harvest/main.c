@@ -188,7 +188,7 @@ void *store_packets(pthread_mutex_t lock) {
     return NULL;
   }
   
-  while(true) {
+  while(TRUE) {
     pthread_mutex_lock(&lock);
 
     if(q->count > 0 && q->head != NULL) {
@@ -249,7 +249,7 @@ void *capture_process_packets(pthread_mutex_t lock) {
     exit(1);
   }
   
-  while(true){
+  while(TRUE){
     if ((packet = pcap_next(capStream, &pkthdr)) == NULL) {
       // most likely due to capture timeout
       fprintf(stderr, "ERROR: Error getting the packet (%s).\n", errbuf);

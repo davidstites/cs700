@@ -16,6 +16,9 @@
 #define EN0 "en0"
 #define EN1 "en1"
 
+#define FALSE 0
+#define TRUE 1
+
 #define MAX_BYTES_TO_CAPTURE 2048
 
 #define READ_TIMEOUT_MS 10000 /* 10 seconds */
