@@ -1,13 +1,18 @@
+CC = gcc
+ARCHS = i386
+LIBS = -lpcap
+CFLAGS = -I../ -I. -std=c99 -arch $(ARCHS)
+LDFLAGS =
+
 all: harvestd
 
-harvestd: harvest-main.o
-	gcc harvest-main.o -o harvestd
+H_SOURCE = main.c list.c
 
-harvest-main.o: harvest/main.c common.h list.h list.c
-	cd harvest;
-	gcc main.c
-	
+harvestd:  $(H_SOURCE:.c=.o)
+	gcc $^ -o harvestd
+   
+list.o: list.h harvest.h list.c
+    $(CC) $(CFLAGS) $(LIBS) -c list.c
 
-	
-clean:
-	rm *.o
+main.o: common.h list.h list.c main.c
+    $(CC) $(CFLAGS) $(LIBS) -c main.c

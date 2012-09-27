@@ -9,11 +9,9 @@
 /* Begin PBXBuildFile section */
 		B44516B61610D53A004A1A3C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B44516B51610D53A004A1A3C /* main.m */; };
 		B44516BA1610D53A004A1A3C /* stored.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B44516B91610D53A004A1A3C /* stored.1 */; };
-		B44516C11610DA65004A1A3C /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = B44516C01610DA65004A1A3C /* list.c */; };
-		B44516D116112F4C004A1A3C /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = B44516C01610DA65004A1A3C /* list.c */; };
-		B497EBC01608F28E00BF3C87 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B497EBBF1608F28E00BF3C87 /* main.c */; };
-		B497EBC41608F28E00BF3C87 /* harvest.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B497EBC31608F28E00BF3C87 /* harvest.1 */; };
 		B497EBCB1608F2F600BF3C87 /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B497EBCA1608F2F600BF3C87 /* libpcap.dylib */; };
+		B4CC96131614CE8900A4CA5F /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = B4CC96111614CE8900A4CA5F /* list.c */; };
+		B4F7AE521614C854005C4703 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B4F7AE501614C854005C4703 /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -33,32 +31,31 @@
 			dstPath = /usr/share/man/man1/;
 			dstSubfolderSpec = 0;
 			files = (
-				B497EBC41608F28E00BF3C87 /* harvest.1 in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B4122DAA160BC1BC00C004B4 /* radiotap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = radiotap.h; sourceTree = "<group>"; };
 		B424B1C816114BBF00F98968 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
 		B424B1CE1614080200F98968 /* dstites_sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dstites_sqlite.h; sourceTree = "<group>"; };
 		B44516B11610D53A004A1A3C /* stored */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stored; sourceTree = BUILT_PRODUCTS_DIR; };
 		B44516B51610D53A004A1A3C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		B44516B81610D53A004A1A3C /* stored-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stored-Prefix.pch"; sourceTree = "<group>"; };
 		B44516B91610D53A004A1A3C /* stored.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = stored.1; sourceTree = "<group>"; };
-		B44516BF1610D581004A1A3C /* harvest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = harvest.h; sourceTree = "<group>"; };
-		B44516C01610DA65004A1A3C /* list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = list.c; sourceTree = "<group>"; };
-		B44516C21610DA88004A1A3C /* list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = list.h; sourceTree = "<group>"; };
-		B44516C316110939004A1A3C /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = common.h; sourceTree = "<group>"; };
 		B497EBB81608F28E00BF3C87 /* harvestd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = harvestd; sourceTree = BUILT_PRODUCTS_DIR; };
-		B497EBBF1608F28E00BF3C87 /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		B497EBC21608F28E00BF3C87 /* harvest-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "harvest-Prefix.pch"; sourceTree = "<group>"; };
-		B497EBC31608F28E00BF3C87 /* harvest.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = harvest.1; sourceTree = "<group>"; };
 		B497EBCA1608F2F600BF3C87 /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
-		B4EA7034160D3B7A001A11F7 /* ieee80211_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ieee80211_defs.h; sourceTree = "<group>"; };
-		B4EA7035160D3BAD001A11F7 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
-		B4EA7036160D3BF8001A11F7 /* dstites_radiotap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dstites_radiotap.h; sourceTree = "<group>"; };
+		B4CC960D1614CD3000A4CA5F /* ieee80211_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ieee80211_defs.h; path = harvestd/inc/ieee80211/ieee80211_defs.h; sourceTree = SOURCE_ROOT; };
+		B4CC960F1614CE8900A4CA5F /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = common/common.h; sourceTree = "<group>"; };
+		B4CC96101614CE8900A4CA5F /* harvest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = harvest.h; path = common/harvest.h; sourceTree = "<group>"; };
+		B4CC96111614CE8900A4CA5F /* list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = list.c; path = common/list.c; sourceTree = "<group>"; };
+		B4CC96121614CE8900A4CA5F /* list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = list.h; path = common/list.h; sourceTree = "<group>"; };
+		B4F7AE501614C854005C4703 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = harvestd/main.c; sourceTree = SOURCE_ROOT; };
+		B4F7AE511614C854005C4703 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = harvestd/main.h; sourceTree = SOURCE_ROOT; };
+		B4F7AE571614C8A0005C4703 /* harvest-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "harvest-Prefix.pch"; path = "harvestd/harvest-Prefix.pch"; sourceTree = SOURCE_ROOT; };
+		B4F7AE5A1614C8C0005C4703 /* harvest.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; name = harvest.1; path = harvestd/harvest.1; sourceTree = SOURCE_ROOT; };
+		B4F7AE5B1614CC7F005C4703 /* dstites_radiotap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dstites_radiotap.h; path = harvestd/inc/radiotap/dstites_radiotap.h; sourceTree = SOURCE_ROOT; };
+		B4F7AE5C1614CC7F005C4703 /* radiotap.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = radiotap.h; path = harvestd/inc/radiotap/radiotap.h; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,15 +77,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B4122DAE160BC37B00C004B4 /* radiotap */ = {
-			isa = PBXGroup;
-			children = (
-				B4122DAA160BC1BC00C004B4 /* radiotap.h */,
-				B4EA7036160D3BF8001A11F7 /* dstites_radiotap.h */,
-			);
-			name = radiotap;
-			sourceTree = "<group>";
-		};
 		B44516B41610D53A004A1A3C /* stored */ = {
 			isa = PBXGroup;
 			children = (
@@ -112,10 +100,10 @@
 		B44516C416110CC9004A1A3C /* common */ = {
 			isa = PBXGroup;
 			children = (
-				B44516C316110939004A1A3C /* common.h */,
-				B44516C21610DA88004A1A3C /* list.h */,
-				B44516C01610DA65004A1A3C /* list.c */,
-				B44516BF1610D581004A1A3C /* harvest.h */,
+				B4CC960F1614CE8900A4CA5F /* common.h */,
+				B4CC96101614CE8900A4CA5F /* harvest.h */,
+				B4CC96111614CE8900A4CA5F /* list.c */,
+				B4CC96121614CE8900A4CA5F /* list.h */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -151,31 +139,40 @@
 		B497EBBE1608F28E00BF3C87 /* harvestd */ = {
 			isa = PBXGroup;
 			children = (
-				B4EA7035160D3BAD001A11F7 /* main.h */,
-				B497EBBF1608F28E00BF3C87 /* main.c */,
-				B4EA7032160D3B66001A11F7 /* ieee80211 */,
-				B4122DAE160BC37B00C004B4 /* radiotap */,
-				B497EBC31608F28E00BF3C87 /* harvest.1 */,
-				B497EBC11608F28E00BF3C87 /* Supporting Files */,
+				B4F7AE5A1614C8C0005C4703 /* harvest.1 */,
+				B4F7AE591614C8AD005C4703 /* radiotap */,
+				B4F7AE581614C8A6005C4703 /* ieee80211 */,
+				B4F7AE501614C854005C4703 /* main.c */,
+				B4F7AE511614C854005C4703 /* main.h */,
+				B4F7AE561614C88B005C4703 /* Supporting Files */,
 			);
 			name = harvestd;
 			path = harvest;
 			sourceTree = "<group>";
 		};
-		B497EBC11608F28E00BF3C87 /* Supporting Files */ = {
+		B4F7AE561614C88B005C4703 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				B497EBC21608F28E00BF3C87 /* harvest-Prefix.pch */,
+				B4F7AE571614C8A0005C4703 /* harvest-Prefix.pch */,
 			);
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		B4EA7032160D3B66001A11F7 /* ieee80211 */ = {
+		B4F7AE581614C8A6005C4703 /* ieee80211 */ = {
 			isa = PBXGroup;
 			children = (
-				B4EA7034160D3B7A001A11F7 /* ieee80211_defs.h */,
+				B4CC960D1614CD3000A4CA5F /* ieee80211_defs.h */,
 			);
 			name = ieee80211;
+			sourceTree = "<group>";
+		};
+		B4F7AE591614C8AD005C4703 /* radiotap */ = {
+			isa = PBXGroup;
+			children = (
+				B4F7AE5B1614CC7F005C4703 /* dstites_radiotap.h */,
+				B4F7AE5C1614CC7F005C4703 /* radiotap.h */,
+			);
+			name = radiotap;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -246,7 +243,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B44516D116112F4C004A1A3C /* list.c in Sources */,
 				B44516B61610D53A004A1A3C /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -255,8 +251,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B497EBC01608F28E00BF3C87 /* main.c in Sources */,
-				B44516C11610DA65004A1A3C /* list.c in Sources */,
+				B4F7AE521614C854005C4703 /* main.c in Sources */,
+				B4CC96131614CE8900A4CA5F /* list.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -343,7 +339,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "harvest/harvest-Prefix.pch";
+				GCC_PREFIX_HEADER = "harvestd/harvest-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -353,7 +349,7 @@
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "harvest/harvest-Prefix.pch";
+				GCC_PREFIX_HEADER = "harvestd/harvest-Prefix.pch";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
