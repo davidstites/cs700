@@ -31,13 +31,16 @@ void getSupportedLinkTypes(pcap_t *stream) {
     pcap_perror(stream, "couldn't get list of datalink types.");
   }
   else {
+#ifdef LOGGING
     printf("%d different link types are supported: \n\n", n);
+
 
     for(int i = 0; i < n; i++) {
       const char *str1 = pcap_datalink_val_to_name(dlt_buf[i]);
       const char *str2 = pcap_datalink_val_to_description(dlt_buf[i]);
       printf("%s (%d, %s)\n",str2, dlt_buf[i], str1);
     }
+#endif
     pcap_free_datalinks(dlt_buf);
   }
 }
@@ -63,7 +66,9 @@ void getInterfaceInformation(pcap_if_t *iface, bpf_u_int32 *netp, bpf_u_int32 *m
     exit(1);
   }
   
+#ifdef LOGGING
   printf("Network address: %s\n", net);
+#endif
   
   // do the same as above for the device's mask
   addr.s_addr = *maskp;
@@ -74,13 +79,16 @@ void getInterfaceInformation(pcap_if_t *iface, bpf_u_int32 *netp, bpf_u_int32 *m
     exit(1);
   }
   
+#ifdef LOGGING
   printf("Netmask: %s\n", mask);
+#endif
 }
 
 void getAvailableInterfaces() {
   char errbuf[PCAP_ERRBUF_SIZE];
-  pcap_if_t *devlist;
+  pcap_if_t *devlist = NULL;
   
+#ifdef LOGGING
   printf("Interfaces available: \n\n");
 
   /* get a list of all the devices that we can open */
@@ -93,6 +101,8 @@ void getAvailableInterfaces() {
   }
   
   printf("\n");
+#endif
+  
   pcap_freealldevs(devlist);
 }
 
@@ -145,7 +155,7 @@ pcap_t *openDevice(pcap_if_t *dev) {
 }
 
 void send_harvest(harvest *h) {
-  //#ifdef PRINTING
+#ifdef PRINTING
   printf("===============================\nHARVEST\n");
   printf("Timestamp: %llu\n", h->timestamp);
   printf("Message type: %d\n", h->msg_type);
@@ -156,7 +166,7 @@ void send_harvest(harvest *h) {
   printf("SRC: %02x:%02x:%02x:%02x:%02x:%02x\n",  h->src[0],  h->src[1],  h->src[2],  h->src[3], h->src[4], h->src[5]);
   printf("BSSID: %02x:%02x:%02x:%02x:%02x:%02x\n", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
   printf("SSID: %s\n", h->ssid);
-  //#endif
+#endif
   
   cnt = send(sock, h, sizeof(struct harvest), 0);
 }
@@ -196,12 +206,16 @@ void *store_packets(pthread_mutex_t lock) {
       q->head = remove_front(q->head);
       q->count--;
       
+#ifdef LOGGING
+      printf("queue count (REMOVE): %i\n", q->count);
+#endif
+      
       pthread_mutex_unlock(&lock);
     }
     else {
       pthread_mutex_unlock(&lock);
       //DRS
-      //pthread_yield_np();
+      pthread_yield_np();
     }
   }
   
@@ -373,23 +387,31 @@ void *capture_process_packets(pthread_mutex_t lock) {
       // we would only really be interested in the ssid to see that it is *not* a base-station but rather a client broadcast
       
       // the format is u_int8_t tag, u_int8_t length then some u_int8_t data for the length read in
-      
       u_int8_t *tag = wh->u.probe_req.variable;
       tag++;
       
       int len = *tag;
-      if(len > 0) {
+      if(len > 0 && len <= MAX_SSID_LEN) {
         tag++;
         
 #ifdef LOGGING
         printf("SSID: ");
 #endif
         
-        // DRS
-        //strncpy(h->ssid, (const char *)tag, len);
+        // DRS copy over the length of the SSID
+        if(len <= MAX_SSID_LEN) {
+          strncpy(h->ssid, (const char *)tag, len);
+          // add on the null byte
+          h->ssid[len + 1] = '\0';
+        }
+        else {
+          strncpy(h->ssid, (const char *)tag, len);
+          // add on the null byte
+          h->ssid[MAX_SSID_LEN] = '\0';
+        }
         
 #ifdef LOGGING
-        printf("\n");
+        printf("%s\n", h->ssid);
 #endif
       }
       
@@ -406,10 +428,10 @@ void *capture_process_packets(pthread_mutex_t lock) {
       
       pthread_mutex_unlock(&lock);
       
-      #ifdef LOGGING
+#ifdef LOGGING
       packets_captured++;
-      printf("packets captured: %llu, queue count: %i\n", packets_captured, q->count);
-      #endif
+      printf("packets captured: %llu, queue count (INSERT): %i\n", packets_captured, q->count);
+#endif
     }
   }
   
