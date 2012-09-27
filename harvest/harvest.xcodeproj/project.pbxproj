@@ -7,24 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		B44516B61610D53A004A1A3C /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B44516B51610D53A004A1A3C /* main.m */; };
-		B44516BA1610D53A004A1A3C /* stored.1 in CopyFiles */ = {isa = PBXBuildFile; fileRef = B44516B91610D53A004A1A3C /* stored.1 */; };
 		B497EBCB1608F2F600BF3C87 /* libpcap.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B497EBCA1608F2F600BF3C87 /* libpcap.dylib */; };
 		B4CC96131614CE8900A4CA5F /* list.c in Sources */ = {isa = PBXBuildFile; fileRef = B4CC96111614CE8900A4CA5F /* list.c */; };
+		B4CC96171614EC9500A4CA5F /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = B4CC96161614EC9500A4CA5F /* libsqlite3.dylib */; };
 		B4F7AE521614C854005C4703 /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B4F7AE501614C854005C4703 /* main.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		B44516AF1610D53A004A1A3C /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = /usr/share/man/man1/;
-			dstSubfolderSpec = 0;
-			files = (
-				B44516BA1610D53A004A1A3C /* stored.1 in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 1;
-		};
 		B497EBB61608F28E00BF3C87 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -37,19 +26,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		B424B1C816114BBF00F98968 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = main.h; sourceTree = "<group>"; };
-		B424B1CE1614080200F98968 /* dstites_sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = dstites_sqlite.h; sourceTree = "<group>"; };
-		B44516B11610D53A004A1A3C /* stored */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = stored; sourceTree = BUILT_PRODUCTS_DIR; };
-		B44516B51610D53A004A1A3C /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		B44516B81610D53A004A1A3C /* stored-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "stored-Prefix.pch"; sourceTree = "<group>"; };
-		B44516B91610D53A004A1A3C /* stored.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = stored.1; sourceTree = "<group>"; };
 		B497EBB81608F28E00BF3C87 /* harvestd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = harvestd; sourceTree = BUILT_PRODUCTS_DIR; };
 		B497EBCA1608F2F600BF3C87 /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
 		B4CC960D1614CD3000A4CA5F /* ieee80211_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ieee80211_defs.h; path = harvestd/inc/ieee80211/ieee80211_defs.h; sourceTree = SOURCE_ROOT; };
-		B4CC960F1614CE8900A4CA5F /* common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = common.h; path = common/common.h; sourceTree = "<group>"; };
-		B4CC96101614CE8900A4CA5F /* harvest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = harvest.h; path = common/harvest.h; sourceTree = "<group>"; };
 		B4CC96111614CE8900A4CA5F /* list.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = list.c; path = common/list.c; sourceTree = "<group>"; };
 		B4CC96121614CE8900A4CA5F /* list.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = list.h; path = common/list.h; sourceTree = "<group>"; };
+		B4CC96151614EC0600A4CA5F /* harvest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = harvest.h; path = common/harvest.h; sourceTree = "<group>"; };
+		B4CC96161614EC9500A4CA5F /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.dylib; path = usr/lib/libsqlite3.dylib; sourceTree = SDKROOT; };
+		B4CC96191614F2C200A4CA5F /* dstites_sqlite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dstites_sqlite.h; path = common/dstites_sqlite.h; sourceTree = SOURCE_ROOT; };
 		B4F7AE501614C854005C4703 /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = main.c; path = harvestd/main.c; sourceTree = SOURCE_ROOT; };
 		B4F7AE511614C854005C4703 /* main.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = main.h; path = harvestd/main.h; sourceTree = SOURCE_ROOT; };
 		B4F7AE571614C8A0005C4703 /* harvest-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "harvest-Prefix.pch"; path = "harvestd/harvest-Prefix.pch"; sourceTree = SOURCE_ROOT; };
@@ -59,17 +43,11 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		B44516AE1610D53A004A1A3C /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B497EBB51608F28E00BF3C87 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B4CC96171614EC9500A4CA5F /* libsqlite3.dylib in Frameworks */,
 				B497EBCB1608F2F600BF3C87 /* libpcap.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -77,33 +55,12 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		B44516B41610D53A004A1A3C /* stored */ = {
-			isa = PBXGroup;
-			children = (
-				B424B1C816114BBF00F98968 /* main.h */,
-				B44516B51610D53A004A1A3C /* main.m */,
-				B44516B91610D53A004A1A3C /* stored.1 */,
-				B44516B71610D53A004A1A3C /* Supporting Files */,
-				B424B1CE1614080200F98968 /* dstites_sqlite.h */,
-			);
-			path = stored;
-			sourceTree = "<group>";
-		};
-		B44516B71610D53A004A1A3C /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				B44516B81610D53A004A1A3C /* stored-Prefix.pch */,
-			);
-			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
 		B44516C416110CC9004A1A3C /* common */ = {
 			isa = PBXGroup;
 			children = (
-				B4CC960F1614CE8900A4CA5F /* common.h */,
-				B4CC96101614CE8900A4CA5F /* harvest.h */,
 				B4CC96111614CE8900A4CA5F /* list.c */,
 				B4CC96121614CE8900A4CA5F /* list.h */,
+				B4CC96151614EC0600A4CA5F /* harvest.h */,
 			);
 			name = common;
 			sourceTree = "<group>";
@@ -113,7 +70,6 @@
 			children = (
 				B44516C416110CC9004A1A3C /* common */,
 				B497EBBE1608F28E00BF3C87 /* harvestd */,
-				B44516B41610D53A004A1A3C /* stored */,
 				B497EBBB1608F28E00BF3C87 /* Frameworks */,
 				B497EBB91608F28E00BF3C87 /* Products */,
 			);
@@ -123,7 +79,6 @@
 			isa = PBXGroup;
 			children = (
 				B497EBB81608F28E00BF3C87 /* harvestd */,
-				B44516B11610D53A004A1A3C /* stored */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -131,6 +86,7 @@
 		B497EBBB1608F28E00BF3C87 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				B4CC96161614EC9500A4CA5F /* libsqlite3.dylib */,
 				B497EBCA1608F2F600BF3C87 /* libpcap.dylib */,
 			);
 			name = Frameworks;
@@ -139,15 +95,24 @@
 		B497EBBE1608F28E00BF3C87 /* harvestd */ = {
 			isa = PBXGroup;
 			children = (
-				B4F7AE5A1614C8C0005C4703 /* harvest.1 */,
-				B4F7AE591614C8AD005C4703 /* radiotap */,
-				B4F7AE581614C8A6005C4703 /* ieee80211 */,
 				B4F7AE501614C854005C4703 /* main.c */,
 				B4F7AE511614C854005C4703 /* main.h */,
+				B4CC96181614ECA700A4CA5F /* sqlite */,
+				B4F7AE591614C8AD005C4703 /* radiotap */,
+				B4F7AE581614C8A6005C4703 /* ieee80211 */,
+				B4F7AE5A1614C8C0005C4703 /* harvest.1 */,
 				B4F7AE561614C88B005C4703 /* Supporting Files */,
 			);
 			name = harvestd;
 			path = harvest;
+			sourceTree = "<group>";
+		};
+		B4CC96181614ECA700A4CA5F /* sqlite */ = {
+			isa = PBXGroup;
+			children = (
+				B4CC96191614F2C200A4CA5F /* dstites_sqlite.h */,
+			);
+			name = sqlite;
 			sourceTree = "<group>";
 		};
 		B4F7AE561614C88B005C4703 /* Supporting Files */ = {
@@ -178,23 +143,6 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B44516B01610D53A004A1A3C /* stored */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = B44516BD1610D53A004A1A3C /* Build configuration list for PBXNativeTarget "stored" */;
-			buildPhases = (
-				B44516AD1610D53A004A1A3C /* Sources */,
-				B44516AE1610D53A004A1A3C /* Frameworks */,
-				B44516AF1610D53A004A1A3C /* CopyFiles */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-			);
-			name = stored;
-			productName = stored;
-			productReference = B44516B11610D53A004A1A3C /* stored */;
-			productType = "com.apple.product-type.tool";
-		};
 		B497EBB71608F28E00BF3C87 /* harvestd */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = B497EBC71608F28E00BF3C87 /* Build configuration list for PBXNativeTarget "harvestd" */;
@@ -233,20 +181,11 @@
 			projectRoot = "";
 			targets = (
 				B497EBB71608F28E00BF3C87 /* harvestd */,
-				B44516B01610D53A004A1A3C /* stored */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXSourcesBuildPhase section */
-		B44516AD1610D53A004A1A3C /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				B44516B61610D53A004A1A3C /* main.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B497EBB41608F28E00BF3C87 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -259,28 +198,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin XCBuildConfiguration section */
-		B44516BB1610D53A004A1A3C /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "stored/stored-Prefix.pch";
-				OTHER_LDFLAGS = "-lsqlite3";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Debug;
-		};
-		B44516BC1610D53A004A1A3C /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "stored/stored-Prefix.pch";
-				OTHER_LDFLAGS = "-lsqlite3";
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = Release;
-		};
 		B497EBC51608F28E00BF3C87 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -298,6 +215,7 @@
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"$(inherited)",
+					"LOGGING=1",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -357,15 +275,6 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		B44516BD1610D53A004A1A3C /* Build configuration list for PBXNativeTarget "stored" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				B44516BB1610D53A004A1A3C /* Debug */,
-				B44516BC1610D53A004A1A3C /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		B497EBB21608F28E00BF3C87 /* Build configuration list for PBXProject "harvest" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

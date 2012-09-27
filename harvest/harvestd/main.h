@@ -9,9 +9,23 @@
 #ifndef harvest_main_h
 #define harvest_main_h
 
-#include <pthread.h>
-#include "common.h"
-#include "list.h"
+#import <pthread.h>
+#import <stdio.h>
+#import <stdlib.h>
+#import <pcap.h>
+#import <errno.h>
+#import <sys/types.h>
+#import <sys/socket.h>
+#import <netinet/in.h>
+#import <arpa/inet.h>
+#import <sqlite3.h>
+
+#import "list.h"
+#import "dstites_sqlite.h"
+#import "harvest.h"
+#import "radiotap.h"
+#import "dstites_radiotap.h"
+#import "ieee80211_defs.h"
 
 #define EN0 "en0"
 #define EN1 "en1"
@@ -34,10 +48,23 @@
 
 node *head = NULL;
 queue *q = NULL;
+sqlite3 *db_handle = NULL;
 
-int sock;
-ssize_t cnt;
-struct sockaddr remote;
+#define DB_NAME "addresses.sqlite"
+
+#define TIMESTAMP_BIND_IDX 1
+#define TYPE_BIND_IDX 2
+#define MSGID_BIND_IDX 3
+#define RSSI_BIND_IDX 4
+#define STNID_BIND_IDX 5
+#define DST_BIND_IDX 6
+#define SRC_BIND_IDX 7
+#define BSSID_BIND_IDX 8
+#define SSID_BIND_IDX 9
+
+const char *CREATE_TBL_STMT = "CREATE TABLE IF NOT EXISTS packets (id INTEGER PRIMARY KEY, timestamp INTEGER NOT NULL, type INTEGER NOT NULL, msg_id INTEGER NOT NULL, rssi INTEGER NOT NULL, stn_id INTEGER NOT NULL, dst TEXT NOT NULL, src TEXT NOT NULL, bssid TEXT NOT NULL, SSID TEXT)";
+
+const char *INSERT_ROW_STMT = "INSERT INTO packets (timestamp, type, msg_id, rssi, stn_id, dst, src, bssid, ssid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 const char *PROBE_REQ_FILTER = "wlan subtype probe-req";
 
@@ -49,9 +76,10 @@ pcap_t *openDevice(pcap_if_t *dev);
 //void setupFilter(struct bpf_program filter);
 void startCapture();
 
+sqlite3 *open_database();
+void close_database(sqlite3 *handle);
+void insert_packet_into_db(harvest *h);
 void *capture_process_packets(pthread_mutex_t lock);
 void *store_packets(pthread_mutex_t lock);
-void send_harvest(harvest *h);
-int setup_socks();
 
 #endif

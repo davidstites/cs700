@@ -6,7 +6,7 @@
 //
 //
 
-#include "list.h"
+#import "list.h"
 
 node *create() {  
   node *n;

@@ -6,22 +6,7 @@
 //
 //
 
-#import <pthread.h>
-#import <stdio.h>
-#import <stdlib.h>
-#import <pcap.h>
-#import <errno.h>
-#import <sys/types.h>
-#import <sys/socket.h>
-#import <netinet/in.h>
-#import <arpa/inet.h>
-
 #import "main.h"
-#import "list.h"
-#import "harvest.h"
-#import "radiotap.h"
-#import "dstites_radiotap.h"
-#import "ieee80211_defs.h"
 
 void getSupportedLinkTypes(pcap_t *stream) {
   int *dlt_buf;
@@ -154,60 +139,93 @@ pcap_t *openDevice(pcap_if_t *dev) {
   return pcap_open_live(dev->name /* device */, MAX_BYTES_TO_CAPTURE /* bytes to capture */, PROMISC_ON /* promisc mode */, READ_TIMEOUT_MS /* timeout */, errbuf);
 }
 
-void send_harvest(harvest *h) {
-#ifdef PRINTING
-  printf("===============================\nHARVEST\n");
-  printf("Timestamp: %llu\n", h->timestamp);
-  printf("Message type: %d\n", h->msg_type);
-  printf("Message ID: %llu\n", h->msg_id);
-  printf("Message RSSI: %i\n", h->rssi);
-  printf("Station ID: %i\n", h->stn_id);
-  printf("DST: %02x:%02x:%02x:%02x:%02x:%02x\n", h->dst[0], h->dst[1], h->dst[2], h->dst[3], h->dst[4], h->dst[5]);
-  printf("SRC: %02x:%02x:%02x:%02x:%02x:%02x\n",  h->src[0],  h->src[1],  h->src[2],  h->src[3], h->src[4], h->src[5]);
-  printf("BSSID: %02x:%02x:%02x:%02x:%02x:%02x\n", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
-  printf("SSID: %s\n", h->ssid);
-#endif
+#pragma mark sqlite3
+
+sqlite3 *open_database() {
+  sqlite3 *db_handle = NULL;
   
-  cnt = send(sock, h, sizeof(struct harvest), 0);
+  char *home_dir = getenv("HOME");
+  
+  // add one for the path seperator and null char
+  //DRS
+  //char *path = (char *) malloc(sizeof(char) * (strlen(home_dir) + strlen(DB_NAME) + 2));
+  
+  //path = strcat(home_dir, "/");
+  //path = strcat(path, DB_NAME);
+  
+  CALL_SQLITE(open("/Users/dstites/addresses.sqlite", &db_handle));
+  
+  // create table if necessary
+  sqlite3_exec(db_handle, CREATE_TBL_STMT, NULL, NULL, NULL);
+  
+  return db_handle;
 }
 
-int setup_socks() {
-  socklen_t socklen = sizeof(struct sockaddr);
-  memset(&remote, 0, socklen);
+void close_database(sqlite3 *handle) {
+  sqlite3_close(handle);
+}
+
+void insert_packet_into_db(harvest *h) {
+  sqlite3_stmt *stmt;
+  CALL_SQLITE(prepare_v2(db_handle, INSERT_ROW_STMT, strlen(INSERT_ROW_STMT) + 1, &stmt, NULL));
   
-  if((sock = socket(AF_UNIX, SOCK_STREAM, 0)) < 0) {
-    printf("client socket failure %d\n", errno);
-    perror("socket: ");
-    return errno;
+  CALL_SQLITE(bind_int64(stmt, TIMESTAMP_BIND_IDX, h->timestamp));
+  CALL_SQLITE(bind_int(stmt, TYPE_BIND_IDX, h->msg_type));
+  CALL_SQLITE(bind_int64(stmt, MSGID_BIND_IDX, h->msg_id));
+  CALL_SQLITE(bind_int(stmt, RSSI_BIND_IDX, h->rssi));
+  CALL_SQLITE(bind_int(stmt, STNID_BIND_IDX, h->stn_id));
+  
+  //DRS ETH_ALEN
+  char *dst = (char *)malloc(sizeof(char) * ETH_ALEN + 1);
+  char *src = (char *)malloc(sizeof(char) * ETH_ALEN + 1);
+  char *bssid = (char *)malloc(sizeof(char) * ETH_ALEN + 1);
+  char *ssid = (char *)malloc(sizeof(char) * SSID_BUF_SIZE);
+  
+  sprintf(dst, "%x:%x:%x:%x:%x:%x", h->dst[0], h->dst[1], h->dst[2], h->dst[3], h->dst[4], h->dst[5]);
+  sprintf(src, "%x:%x:%x:%x:%x:%x", h->src[0], h->src[1], h->src[2], h->src[3], h->src[4], h->src[5]);
+  sprintf(bssid, "%x:%x:%x:%x:%x:%x", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
+  
+  //DRS ETH_ALEN
+  //*(dst + 6) = '\0';
+  //*(src + 6) = '\0';
+  //*(bssid + 6) = '\0';
+  
+  CALL_SQLITE(bind_text(stmt, DST_BIND_IDX, dst, strlen(dst), SQLITE_STATIC));
+  CALL_SQLITE(bind_text(stmt, SRC_BIND_IDX, src, strlen(src), SQLITE_STATIC));
+  CALL_SQLITE(bind_text(stmt, BSSID_BIND_IDX, bssid, strlen(bssid), SQLITE_STATIC));
+  
+  if(h->ssid != NULL && strlen(h->ssid) > 0) {
+    sprintf(bssid, "%s", h->ssid);
+    *(ssid + MAX_SSID_LEN) = '\0';
+    CALL_SQLITE(bind_text(stmt, SSID_BIND_IDX, ssid, strlen(ssid), SQLITE_STATIC));
+  }
+  else {
+    CALL_SQLITE(bind_text(stmt, SSID_BIND_IDX, "", 0, SQLITE_STATIC));
   }
   
-  remote.sa_family = AF_UNIX;
-  strncpy(remote.sa_data, SOCK_PATH, strlen(SOCK_PATH));
+  CALL_SQLITE_EXPECT(step(stmt), DONE);
   
-  if(connect(sock, &remote, socklen) < 0) {
-    printf("client connect failure %d\n", errno);
-    perror("connect: ");
-    return errno;
-  }
-  
-  return SUCCESS;
+  free(dst);
+  free(src);
+  free(bssid);
+  free(ssid);
 }
 
 void *store_packets(pthread_mutex_t lock) {
-  if(setup_socks() < 0) {
-    return NULL;
-  }
-  
+  db_handle = open_database();
+
   while(TRUE) {
     pthread_mutex_lock(&lock);
 
     if(q->count > 0 && q->head != NULL) {
-      send_harvest(q->head->h);
+      insert_packet_into_db(q->head->h);
+      
       q->head = remove_front(q->head);
       q->count--;
       
 #ifdef LOGGING
       printf("queue count (REMOVE): %i\n", q->count);
+      printf ("row id was %d\n", (int)sqlite3_last_insert_rowid (db_handle));
 #endif
       
       pthread_mutex_unlock(&lock);
@@ -218,6 +236,8 @@ void *store_packets(pthread_mutex_t lock) {
       pthread_yield_np();
     }
   }
+  
+  sqlite3_close(db_handle);
   
   return NULL;
 }
@@ -479,6 +499,7 @@ int main(int argc, const char * argv[]) {
   
   pthread_mutex_destroy(&lock);
   
+  sqlite3_close(db_handle);
   free(q);
 
   return 0;

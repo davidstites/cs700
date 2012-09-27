@@ -9,11 +9,11 @@
 #ifndef harvest_list_h
 #define harvest_list_h
 
-#include <string.h>
-#include <stdlib.h>
-#include <pthread.h>
+#import <string.h>
+#import <stdlib.h>
+#import <pthread.h>
 
-#include "harvest.h"
+#import "harvest.h"
 
 typedef struct node {
   harvest *h;

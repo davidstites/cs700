@@ -2,14 +2,12 @@
 //  harvest.h
 //  harvest
 //
-//  Created by David R. Stites on 9/24/12.
+//  Created by David R. Stites on 9/27/12.
 //
 //
 
 #ifndef harvest_harvest_h
 #define harvest_harvest_h
-
-#include <sys/types.h>
 
 #define MAX_SSID_LEN 32
 #define SSID_BUF_SIZE 33

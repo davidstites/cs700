@@ -11,7 +11,7 @@
 #ifndef harvest_dstites_radiotap_h
 #define harvest_dstites_radiotap_h
 
-#import "main.h"
+#define STRUCT_PACKED          __attribute__((__packed__))
 
 struct ieee80211_radiotap_data {
   u_int64_t                               tsft;
