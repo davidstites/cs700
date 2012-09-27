@@ -79,9 +79,20 @@ void *store_packets(pthread_mutex_t lock) {
   sqlite3 *db_handle = NULL;
   
   // DRS
-  if(sqlite3_open("/Users/dstites/addresses.sqlite", &db_handle) == SQLITE_OK) {
-    printf("opened sqlite database");
-  }
+  CALL_SQLITE(open("/Users/dstites/addresses.sqlite", &db_handle));
+
+  
+  // create table if necessary
+  sqlite3_exec(db_handle, CREATE_TBL_STMT, NULL, NULL, NULL);
+  
+  char * sql;
+  sqlite3_stmt * stmt;
+  int i;
+  sql = "INSERT INTO packets (xyz) VALUES (?)";
+  CALL_SQLITE (prepare_v2 (db_handle, sql, strlen (sql) + 1, & stmt, NULL));
+  CALL_SQLITE (bind_text (stmt, 1, "fruit", 6, SQLITE_STATIC));
+  CALL_SQLITE_EXPECT (step (stmt), DONE);
+  printf ("row id was %d\n", (int) sqlite3_last_insert_rowid (db_handle));
   
   sqlite3_close(db_handle);
   return NULL;

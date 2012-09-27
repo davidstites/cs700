@@ -21,11 +21,14 @@
 
 #import "common.h"
 #import "harvest.h"
+#import "dstites_sqlite.h"
 
 void *receive_packets(pthread_mutex_t lock);
 void *store_packets(pthread_mutex_t lock);
 
 #define DB_PATH "~/"
 #define DB_NAME "addresses.sqlite"
+
+const char *CREATE_TBL_STMT = "CREATE TABLE IF NOT EXISTS packets (id INTEGER PRIMARY KEY, timestamp INTEGER NOT NULL, type INTEGER NOT NULL, msg_id INTEGER NOT NULL, rssi INTEGER NOT NULL, stn_id INTEGER NOT NULL, dst TEXT NOT NULL, src TEXT NOT NULL, bssid TEXT NOT NULL, SSID TEXT)";
 
 #endif
