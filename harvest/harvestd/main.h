@@ -68,13 +68,11 @@ const char *INSERT_ROW_STMT = "INSERT INTO packets (timestamp, type, msg_id, rss
 
 const char *PROBE_REQ_FILTER = "wlan subtype probe-req";
 
-void getSupportedLinkTypes(pcap_t *stream);
-void getAvailableInterfaces();
-void getInterfaceInformation();
-pcap_if_t *copyInterface(char *dev);
-pcap_t *openDevice(pcap_if_t *dev);
-//void setupFilter(struct bpf_program filter);
-void startCapture();
+void get_supported_link_types(pcap_t *stream);
+void get_available_interfaces();
+void get_interface_information();
+pcap_if_t *copy_interface(char *dev);
+pcap_t *open_device(pcap_if_t *dev);
 
 sqlite3 *open_database();
 void close_database(sqlite3 *handle);

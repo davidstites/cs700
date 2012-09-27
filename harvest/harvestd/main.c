@@ -8,7 +8,7 @@
 
 #import "main.h"
 
-void getSupportedLinkTypes(pcap_t *stream) {
+void get_supported_link_types(pcap_t *stream) {
   int *dlt_buf;
   int n;
   
@@ -30,7 +30,7 @@ void getSupportedLinkTypes(pcap_t *stream) {
   }
 }
 
-void getInterfaceInformation(pcap_if_t *iface, bpf_u_int32 *netp, bpf_u_int32 *maskp) {
+void get_interface_information(pcap_if_t *iface, bpf_u_int32 *netp, bpf_u_int32 *maskp) {
   char *net;
   char *mask;
   char errbuf[PCAP_ERRBUF_SIZE];
@@ -69,7 +69,7 @@ void getInterfaceInformation(pcap_if_t *iface, bpf_u_int32 *netp, bpf_u_int32 *m
 #endif
 }
 
-void getAvailableInterfaces() {
+void get_available_interfaces() {
   char errbuf[PCAP_ERRBUF_SIZE];
   pcap_if_t *devlist = NULL;
   
@@ -91,7 +91,7 @@ void getAvailableInterfaces() {
   pcap_freealldevs(devlist);
 }
 
-pcap_if_t *copyInterface(char *dev) {
+pcap_if_t *copy_interface(char *dev) {
   char errbuf[PCAP_ERRBUF_SIZE];
   pcap_if_t *devlist;
   
@@ -129,7 +129,7 @@ pcap_if_t *copyInterface(char *dev) {
   return NULL;
 }
 
-pcap_t *openDevice(pcap_if_t *dev) {
+pcap_t *open_device(pcap_if_t *dev) {
   char errbuf[PCAP_ERRBUF_SIZE];
 
   if(dev == NULL) {
@@ -144,16 +144,11 @@ pcap_t *openDevice(pcap_if_t *dev) {
 sqlite3 *open_database() {
   sqlite3 *db_handle = NULL;
   
-  char *home_dir = getenv("HOME");
+  char *path;
+  asprintf(&path, "%s%s%s", getenv("HOME"), "/", DB_NAME);
   
-  // add one for the path seperator and null char
-  //DRS
-  //char *path = (char *) malloc(sizeof(char) * (strlen(home_dir) + strlen(DB_NAME) + 2));
-  
-  //path = strcat(home_dir, "/");
-  //path = strcat(path, DB_NAME);
-  
-  CALL_SQLITE(open("/Users/dstites/addresses.sqlite", &db_handle));
+  CALL_SQLITE(open(path, &db_handle));
+  free(path);
   
   // create table if necessary
   sqlite3_exec(db_handle, CREATE_TBL_STMT, NULL, NULL, NULL);
@@ -176,28 +171,23 @@ void insert_packet_into_db(harvest *h) {
   CALL_SQLITE(bind_int(stmt, STNID_BIND_IDX, h->stn_id));
   
   //DRS ETH_ALEN
-  char *dst = (char *)malloc(sizeof(char) * ETH_ALEN + 1);
-  char *src = (char *)malloc(sizeof(char) * ETH_ALEN + 1);
-  char *bssid = (char *)malloc(sizeof(char) * ETH_ALEN + 1);
-  char *ssid = (char *)malloc(sizeof(char) * SSID_BUF_SIZE);
+  char *dst;
+  char *src;
+  char *bssid;
+  char *ssid;
   
-  sprintf(dst, "%x:%x:%x:%x:%x:%x", h->dst[0], h->dst[1], h->dst[2], h->dst[3], h->dst[4], h->dst[5]);
-  sprintf(src, "%x:%x:%x:%x:%x:%x", h->src[0], h->src[1], h->src[2], h->src[3], h->src[4], h->src[5]);
-  sprintf(bssid, "%x:%x:%x:%x:%x:%x", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
-  
-  //DRS ETH_ALEN
-  //*(dst + 6) = '\0';
-  //*(src + 6) = '\0';
-  //*(bssid + 6) = '\0';
+  asprintf(&dst, "%02x:%02x:%02x:%02x:%02x:%02x", h->dst[0], h->dst[1], h->dst[2], h->dst[3], h->dst[4], h->dst[5]);
+  asprintf(&src, "%02x:%02x:%02x:%02x:%02x:%02x", h->src[0], h->src[1], h->src[2], h->src[3], h->src[4], h->src[5]);
+  asprintf(&bssid, "%02x:%02x:%02x:%02x:%02x:%02x", h->bssid[0], h->bssid[1], h->bssid[2], h->bssid[3], h->bssid[4], h->bssid[5]);
   
   CALL_SQLITE(bind_text(stmt, DST_BIND_IDX, dst, strlen(dst), SQLITE_STATIC));
   CALL_SQLITE(bind_text(stmt, SRC_BIND_IDX, src, strlen(src), SQLITE_STATIC));
   CALL_SQLITE(bind_text(stmt, BSSID_BIND_IDX, bssid, strlen(bssid), SQLITE_STATIC));
   
-  if(h->ssid != NULL && strlen(h->ssid) > 0) {
-    sprintf(bssid, "%s", h->ssid);
-    *(ssid + MAX_SSID_LEN) = '\0';
+  if(h->ssid != NULL && (strlen(h->ssid) > 0) && (strlen(h->ssid) <= MAX_SSID_LEN)) {
+    asprintf(&ssid, "%s", h->ssid);
     CALL_SQLITE(bind_text(stmt, SSID_BIND_IDX, ssid, strlen(ssid), SQLITE_STATIC));
+    free(ssid);
   }
   else {
     CALL_SQLITE(bind_text(stmt, SSID_BIND_IDX, "", 0, SQLITE_STATIC));
@@ -208,7 +198,6 @@ void insert_packet_into_db(harvest *h) {
   free(dst);
   free(src);
   free(bssid);
-  free(ssid);
 }
 
 void *store_packets(pthread_mutex_t lock) {
@@ -232,7 +221,6 @@ void *store_packets(pthread_mutex_t lock) {
     }
     else {
       pthread_mutex_unlock(&lock);
-      //DRS
       pthread_yield_np();
     }
   }
@@ -252,32 +240,30 @@ void *capture_process_packets(pthread_mutex_t lock) {
   
   unsigned long long packets_captured = 0;
   
-  getAvailableInterfaces();
-  pcap_if_t *iface = copyInterface(EN1);
+  get_available_interfaces();
+  pcap_if_t *iface = copy_interface(EN1);
   
-  getInterfaceInformation(iface, &netp, &maskp);
+  get_interface_information(iface, &netp, &maskp);
   
-  pcap_t *capStream = openDevice(iface);
+  pcap_t *capStream = open_device(iface);
   if(capStream != NULL) {
     printf("opened interface: %s\n", iface->name);
   }
   
-  /* DRS do we need this? */
   pcap_set_promisc(capStream, PROMISC_ON);
   pcap_set_rfmon(capStream, PROMISC_ON);
   
-  getSupportedLinkTypes(capStream);
+  get_supported_link_types(capStream);
   
-  // DRS do this better
   pcap_set_datalink(capStream, DLT_IEEE802_11_RADIO);
   
-  // DRS compiles the filter expression into a BPF filter program
+  // compiles the filter expression into a BPF filter program
   if (pcap_compile(capStream, &filter, PROBE_REQ_FILTER, 1, /*maskp*/ /* DRS */ PCAP_NETMASK_UNKNOWN) == -1) {
     fprintf(stderr, "ERROR: %s\n", pcap_geterr(capStream));
     exit(1);
   }
   
-  // DRS load the filter program into the packet capture device
+  // load the filter program into the packet capture device
   if (pcap_setfilter(capStream, &filter) == -1) {
     fprintf(stderr, "ERROR: %s\n", pcap_geterr(capStream));
     exit(1);
@@ -327,7 +313,7 @@ void *capture_process_packets(pthread_mutex_t lock) {
       }
       
       /* DRS */
-      struct ieee80211_radiotap_data *rt_data = (rh + (sizeof(struct ieee80211_radiotap_header) / 8));
+      struct ieee80211_radiotap_data *rt_data = (struct ieee80211_radiotap_data *)((struct ieee80211_radiotap_header *)rh + 1);
       
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_TSFT)) {
         // shift off the size of a radiotap header and you should be at the beginning
@@ -422,10 +408,10 @@ void *capture_process_packets(pthread_mutex_t lock) {
         if(len <= MAX_SSID_LEN) {
           strncpy(h->ssid, (const char *)tag, len);
           // add on the null byte
-          h->ssid[len + 1] = '\0';
+          h->ssid[len] = '\0';
         }
         else {
-          strncpy(h->ssid, (const char *)tag, len);
+          strncpy(h->ssid, (const char *)tag, MAX_SSID_LEN);
           // add on the null byte
           h->ssid[MAX_SSID_LEN] = '\0';
         }
@@ -439,8 +425,6 @@ void *capture_process_packets(pthread_mutex_t lock) {
 
       node *n = create();
       memcpy(n->h, h, sizeof(harvest));
-      
-      /* DRS are we leaking anywhere else? */
       free(h);
       
       q->head = insert_back(n, q->head);
