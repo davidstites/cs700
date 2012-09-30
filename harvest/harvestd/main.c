@@ -222,7 +222,12 @@ void *store_packets() {
     }
     else {
       pthread_mutex_unlock(&lock);
+			
+#ifdef __APPLE__
       pthread_yield_np();
+#else
+			pthread_yield();
+#endif
     }
   }
   
@@ -284,7 +289,13 @@ void *capture_process_packets() {
       harvest *h = (harvest *)malloc(sizeof(harvest));
       memset(h, 0, sizeof(harvest));
       
+#ifdef __APPLE__
       h->msg_id = arc4random();
+#else
+			srand((unsigned)time(NULL));
+			h->msg_id = rand() % sizeof(int);
+#endif
+      
       h->msg_type = 0;
       h->stn_id = 0;
       
