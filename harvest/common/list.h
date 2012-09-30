@@ -9,11 +9,10 @@
 #ifndef harvest_list_h
 #define harvest_list_h
 
-#import <string.h>
-#import <stdlib.h>
-#import <pthread.h>
+#include <string.h>
+#include <stdlib.h>
 
-#import "harvest.h"
+#include "harvest.h"
 
 typedef struct node {
   harvest *h;
@@ -22,7 +21,6 @@ typedef struct node {
 
 typedef struct queue {
   node *head;
-  //node *tail;
   unsigned int count;
 } queue;
 

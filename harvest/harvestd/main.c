@@ -6,7 +6,7 @@
 //
 //
 
-#import "main.h"
+#include "main.h"
 
 void get_supported_link_types(pcap_t *stream) {
   int *dlt_buf;
@@ -105,6 +105,7 @@ pcap_if_t *copy_interface(char *dev) {
     while(cur_iface->next != NULL) {
       if(strcmp(cur_iface->name, dev) == 0) {
         pcap_if_t *iface = (pcap_if_t *)malloc(sizeof(pcap_if_t));
+				memset(iface, 0, sizeof(pcap_if_t));
         
         iface->next = NULL;
         
@@ -200,7 +201,7 @@ void insert_packet_into_db(harvest *h) {
   free(bssid);
 }
 
-void *store_packets(pthread_mutex_t lock) {
+void *store_packets() {
   db_handle = open_database();
 
   while(TRUE) {
@@ -230,7 +231,7 @@ void *store_packets(pthread_mutex_t lock) {
   return NULL;
 }
 
-void *capture_process_packets(pthread_mutex_t lock) {
+void *capture_process_packets() {
   char errbuf[PCAP_ERRBUF_SIZE];
   bpf_u_int32 netp = 0;
   bpf_u_int32 maskp = 0;
@@ -241,7 +242,7 @@ void *capture_process_packets(pthread_mutex_t lock) {
   unsigned long long packets_captured = 0;
   
   get_available_interfaces();
-  pcap_if_t *iface = copy_interface(EN1);
+  pcap_if_t *iface = copy_interface(EN0);
   
   get_interface_information(iface, &netp, &maskp);
   
@@ -255,19 +256,24 @@ void *capture_process_packets(pthread_mutex_t lock) {
   
   get_supported_link_types(capStream);
   
+	unsigned char linkType = DLT_EN10MB;
+
   pcap_set_datalink(capStream, DLT_IEEE802_11_RADIO);
-  
-  // compiles the filter expression into a BPF filter program
-  if (pcap_compile(capStream, &filter, PROBE_REQ_FILTER, 1, /*maskp*/ /* DRS */ PCAP_NETMASK_UNKNOWN) == -1) {
-    fprintf(stderr, "ERROR: %s\n", pcap_geterr(capStream));
-    exit(1);
-  }
-  
-  // load the filter program into the packet capture device
-  if (pcap_setfilter(capStream, &filter) == -1) {
-    fprintf(stderr, "ERROR: %s\n", pcap_geterr(capStream));
-    exit(1);
-  }
+	
+	// we can only apply the filter if it is wireless
+	if(linkType == DLT_IEEE802_11_RADIO || linkType == DLT_IEEE802_11) {
+		// compiles the filter expression into a BPF filter program
+		if (pcap_compile(capStream, &filter, PROBE_REQ_FILTER, 1, PCAP_NETMASK_UNKNOWN) == -1) {
+			fprintf(stderr, "ERROR: %s\n", pcap_geterr(capStream));
+			exit(1);
+		}
+		
+		// load the filter program into the packet capture device
+		if (pcap_setfilter(capStream, &filter) == -1) {
+			fprintf(stderr, "ERROR: %s\n", pcap_geterr(capStream));
+			exit(1);
+		}
+	}
   
   while(TRUE){
     if ((packet = pcap_next(capStream, &pkthdr)) == NULL) {
@@ -313,9 +319,10 @@ void *capture_process_packets(pthread_mutex_t lock) {
       }
       
       /* DRS */
-      struct ieee80211_radiotap_data *rt_data = (struct ieee80211_radiotap_data *)((struct ieee80211_radiotap_header *)rh + 1);
+      //struct ieee80211_radiotap_data *rt_data = (struct ieee80211_radiotap_data *)((struct ieee80211_radiotap_header *)rh + 1);
+      struct ieee80211_radiotap_data *rt_data = ((u_int8_t*)rh) + sizeof(struct ieee80211_radiotap_header);
       
-      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_TSFT)) {
+			if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_TSFT)) {
         // shift off the size of a radiotap header and you should be at the beginning
         // of your radiotap data
         
@@ -376,6 +383,7 @@ void *capture_process_packets(pthread_mutex_t lock) {
       // adding rh->it_len should get us to the very start of the 802.11 probe request
       /* DRS */
       struct ieee80211_mgmt *wh = (packet + rh->it_len);
+			//ieee80211_h = (struct ieee80211_frame*) &(packet_buffer[sizeof(struct ieee80211_radiotap_header) + 1]);
       
       for(int i = 0; i < ETH_ALEN; i++) {
         h->bssid[i] = wh->bssid[i];
@@ -393,6 +401,9 @@ void *capture_process_packets(pthread_mutex_t lock) {
       // we would only really be interested in the ssid to see that it is *not* a base-station but rather a client broadcast
       
       // the format is u_int8_t tag, u_int8_t length then some u_int8_t data for the length read in
+			
+			// DRS
+			// data = &(packet_buffer[sizeof(struct ieee80211_radiotap_header) + 1 + sizeof(struct ieee80211_frame)]); 
       u_int8_t *tag = wh->u.probe_req.variable;
       tag++;
       
@@ -452,9 +463,8 @@ void *capture_process_packets(pthread_mutex_t lock) {
 }
 
 int main(int argc, const char * argv[]) {
-  pthread_t store_thread; /* thread pool */
+  pthread_t store_thread;
   pthread_t capture_thread;
-  pthread_mutex_t lock;
   
   pthread_mutex_init(&lock, NULL);
   
@@ -464,13 +474,13 @@ int main(int argc, const char * argv[]) {
   q->count = 0;
   
   // init the capture thread and storage threads
-  if(pthread_create(&capture_thread, NULL, capture_process_packets, &lock) != 0) {
+  if(pthread_create(&capture_thread, NULL, capture_process_packets, NULL) != 0) {
     pthread_mutex_destroy(&lock);
     printf("could not create capture thread");
     exit(1);
   }
   
-  if(pthread_create(&store_thread, NULL, store_packets, &lock) != 0) {
+  if(pthread_create(&store_thread, NULL, store_packets, NULL) != 0) {
     pthread_join(capture_thread, NULL);
     pthread_mutex_destroy(&lock);
     printf("could not create store thread");

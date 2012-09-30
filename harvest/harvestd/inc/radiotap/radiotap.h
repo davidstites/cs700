@@ -35,7 +35,7 @@
 #ifndef IEEE80211RADIOTAP_H
 #define IEEE80211RADIOTAP_H
 
-#import <stdint.h>
+#include <stdint.h>
 
 /* Base version of the radiotap packet header data */
 #define PKTHDR_RADIOTAP_VERSION		0

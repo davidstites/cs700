@@ -1,10 +1,9 @@
 CC = gcc
-ARCHS = i386
-LIBS = -lpcap
-FLAGS := -arch $(ARCHS)
+LIBS = -lpcap -lsqlite3 -lpthread
+FLAGS := -D_GNU_SOURCE -Os
 COMMON = ../common
-CFLAGS := -I$(COMMON) -Iinc/radiotap -Iinc/ieee80211 -I. -std=c99 $(FLAGS)
-LDFLAGS := $(FLAGS) -lpcap -lsqlite3
+CFLAGS := -I$(COMMON) -Iinc/radiotap -Iinc/ieee80211 -I. -std=gnu99 $(FLAGS)
+LDFLAGS := $(FLAGS) $(LIBS)
 
 all: harvestd
 
@@ -18,4 +17,4 @@ harvestd:  $(H_SOURCE:.c=.o)
 	$(CC) $(CFLAGS) $(LIBS) -c %<
 
 clean:
-	rm *.o
+	rm -rf *.o harvestd $(COMMON)/*.o

@@ -9,26 +9,33 @@
 #ifndef harvest_main_h
 #define harvest_main_h
 
-#import <pthread.h>
-#import <stdio.h>
-#import <stdlib.h>
-#import <pcap.h>
-#import <errno.h>
-#import <sys/types.h>
-#import <sys/socket.h>
-#import <netinet/in.h>
-#import <arpa/inet.h>
-#import <sqlite3.h>
+#include <pthread.h>
+#include <stdio.h>
+#include <pcap.h>
+#include <errno.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sqlite3.h>
 
-#import "list.h"
-#import "dstites_sqlite.h"
-#import "harvest.h"
-#import "radiotap.h"
-#import "dstites_radiotap.h"
-#import "ieee80211_defs.h"
+#include "list.h"
+#include "dstites_sqlite.h"
+#include "harvest.h"
+#include "radiotap.h"
+#include "dstites_radiotap.h"
+#include "ieee80211_defs.h"
 
-#define EN0 "en0"
-#define EN1 "en1"
+#ifdef __APPLE__
+  #define EN0 "en0"
+  #define EN1 "en1"
+#else
+  #define EN0 "eth0"
+  #define EN1 "wlan1"
+  #define MON1 "mon1"
+#endif
+
+#define LOGGING 1
 
 #define FALSE 0
 #define TRUE 1
@@ -49,6 +56,7 @@
 node *head = NULL;
 queue *q = NULL;
 sqlite3 *db_handle = NULL;
+pthread_mutex_t lock;
 
 #define DB_NAME "addresses.sqlite"
 
@@ -77,7 +85,7 @@ pcap_t *open_device(pcap_if_t *dev);
 sqlite3 *open_database();
 void close_database(sqlite3 *handle);
 void insert_packet_into_db(harvest *h);
-void *capture_process_packets(pthread_mutex_t lock);
-void *store_packets(pthread_mutex_t lock);
+void *capture_process_packets();
+void *store_packets();
 
 #endif

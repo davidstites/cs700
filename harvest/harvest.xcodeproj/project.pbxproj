@@ -26,6 +26,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		B437E4E816180DE9006D0A32 /* Makefile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.make; name = Makefile; path = harvestd/Makefile; sourceTree = SOURCE_ROOT; };
 		B497EBB81608F28E00BF3C87 /* harvestd */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = harvestd; sourceTree = BUILT_PRODUCTS_DIR; };
 		B497EBCA1608F2F600BF3C87 /* libpcap.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpcap.dylib; path = usr/lib/libpcap.dylib; sourceTree = SDKROOT; };
 		B4CC960D1614CD3000A4CA5F /* ieee80211_defs.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ieee80211_defs.h; path = harvestd/inc/ieee80211/ieee80211_defs.h; sourceTree = SOURCE_ROOT; };
@@ -118,6 +119,7 @@
 		B4F7AE561614C88B005C4703 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				B437E4E816180DE9006D0A32 /* Makefile */,
 				B4F7AE571614C8A0005C4703 /* harvest-Prefix.pch */,
 			);
 			name = "Supporting Files";
