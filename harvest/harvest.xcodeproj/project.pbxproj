@@ -96,8 +96,8 @@
 		B497EBBE1608F28E00BF3C87 /* harvestd */ = {
 			isa = PBXGroup;
 			children = (
-				B4F7AE501614C854005C4703 /* main.c */,
 				B4F7AE511614C854005C4703 /* main.h */,
+				B4F7AE501614C854005C4703 /* main.c */,
 				B4CC96181614ECA700A4CA5F /* sqlite */,
 				B4F7AE591614C8AD005C4703 /* radiotap */,
 				B4F7AE581614C8A6005C4703 /* ieee80211 */,

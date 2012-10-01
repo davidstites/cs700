@@ -12,6 +12,7 @@
 #include <pthread.h>
 #include <stdio.h>
 #include <pcap.h>
+#include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
 #include <sys/socket.h>
@@ -26,16 +27,9 @@
 #include "dstites_radiotap.h"
 #include "ieee80211_defs.h"
 
-#ifdef __APPLE__
-  #define EN0 "en0"
-  #define EN1 "en1"
-#else
-  #define EN0 "eth0"
-  #define EN1 "wlan1"
-  #define MON1 "mon1"
-#endif
+#define UID_ROOT 0
 
-#define LOGGING 1
+//#define LOGGING 1
 
 #define FALSE 0
 #define TRUE 1
@@ -48,7 +42,7 @@
 #define PROMISC_ON 1
 
 #define BIT_SET(var, pos) ((var) & (1 << (pos)))
-#define TO_MbPS(rate) ((rate * 500) / 1000)
+#define TO_MBPS(rate) ((rate * 500) / 1000)
 
 #define STRUCT_PACKED          __attribute__((__packed__))
 #define STRUCT_ALIGNED(x)      __attribute__((__aligned__(x)))
@@ -77,9 +71,9 @@ const char *INSERT_ROW_STMT = "INSERT INTO packets (timestamp, type, msg_id, rss
 const char *PROBE_REQ_FILTER = "wlan subtype probe-req";
 
 void get_supported_link_types(pcap_t *stream);
-void get_available_interfaces();
+int get_available_interfaces();
 void get_interface_information();
-pcap_if_t *copy_interface(char *dev);
+pcap_if_t *copy_interface(int iface);
 pcap_t *open_device(pcap_if_t *dev);
 
 sqlite3 *open_database();

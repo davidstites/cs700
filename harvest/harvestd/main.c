@@ -8,6 +8,8 @@
 
 #include "main.h"
 
+#pragma mark pcap functions
+
 void get_supported_link_types(pcap_t *stream) {
   int *dlt_buf;
   int n;
@@ -16,16 +18,14 @@ void get_supported_link_types(pcap_t *stream) {
     pcap_perror(stream, "couldn't get list of datalink types.");
   }
   else {
-#ifdef LOGGING
-    printf("%d different link types are supported: \n\n", n);
-
+    printf("\n%d link types are supported: \n\n", n);
 
     for(int i = 0; i < n; i++) {
       const char *str1 = pcap_datalink_val_to_name(dlt_buf[i]);
       const char *str2 = pcap_datalink_val_to_description(dlt_buf[i]);
-      printf("%s (%d, %s)\n",str2, dlt_buf[i], str1);
+      printf("%d.\t%s (%d, %s)\n", i, str2, dlt_buf[i], str1);
     }
-#endif
+		
     pcap_free_datalinks(dlt_buf);
   }
 }
@@ -46,70 +46,62 @@ void get_interface_information(pcap_if_t *iface, bpf_u_int32 *netp, bpf_u_int32 
   addr.s_addr = *netp;
   net = inet_ntoa(addr);
   
-  if(net == NULL) {
-    perror("inet_ntoa");
-    exit(1);
-  }
-  
-#ifdef LOGGING
-  printf("Network address: %s\n", net);
-#endif
-  
+  printf("Network:\t%s\n", net);
+
   // do the same as above for the device's mask
   addr.s_addr = *maskp;
   mask = inet_ntoa(addr);
   
-  if(mask == NULL) {
-    perror("inet_ntoa");
-    exit(1);
-  }
-  
-#ifdef LOGGING
-  printf("Netmask: %s\n", mask);
-#endif
+  printf("Mask:\t%s\n", mask);
 }
 
-void get_available_interfaces() {
+int get_available_interfaces() {
   char errbuf[PCAP_ERRBUF_SIZE];
   pcap_if_t *devlist = NULL;
   
-#ifdef LOGGING
+	int i = 0;
   printf("Interfaces available: \n\n");
 
   /* get a list of all the devices that we can open */
   if(pcap_findalldevs(&devlist, errbuf) != -1) {
     pcap_if_t *iface = devlist;
     while(iface->next != NULL) {
-      printf("%s\n", iface->name);
+      printf("%d.\t%s\n", i, iface->name);
+			
+			i++;
       iface = iface->next;
     }
   }
   
   printf("\n");
-#endif
   
   pcap_freealldevs(devlist);
+	
+	int iface_chosen = 0;
+	do {
+		printf("Choose an interface: ");
+		scanf("%d", &iface_chosen);
+	} while ((iface_chosen < 0) || (iface_chosen > (i - 1)));
+	
+	return iface_chosen;
 }
 
-pcap_if_t *copy_interface(char *dev) {
+pcap_if_t *copy_interface(int iface_chosen) {
   char errbuf[PCAP_ERRBUF_SIZE];
   pcap_if_t *devlist;
-  
-  if(dev == NULL) {
-    return NULL;
-  }
+	int i = 0;
   
   /* get a list of all the devices that we can open */
   if(pcap_findalldevs(&devlist, errbuf) != -1) {
     pcap_if_t *cur_iface = devlist;
     while(cur_iface->next != NULL) {
-      if(strcmp(cur_iface->name, dev) == 0) {
+      if(i == iface_chosen) {
         pcap_if_t *iface = (pcap_if_t *)malloc(sizeof(pcap_if_t));
 				memset(iface, 0, sizeof(pcap_if_t));
         
         iface->next = NULL;
         
-        iface->name = (char *)malloc(sizeof(char) * strlen(cur_iface->name));
+        iface->name = (char *)malloc(sizeof(char) * (strlen(cur_iface->name) + 1 /* dont forget the null byte */));
         strncpy(iface->name, cur_iface->name, strlen(cur_iface->name));
         
         iface->addresses = (pcap_addr_t *)malloc(sizeof(pcap_addr_t));
@@ -122,6 +114,7 @@ pcap_if_t *copy_interface(char *dev) {
         return iface;
       }
       
+			i++;
       cur_iface = cur_iface->next;
     }
   }
@@ -137,7 +130,7 @@ pcap_t *open_device(pcap_if_t *dev) {
     return NULL;
   }
   
-  return pcap_open_live(dev->name /* device */, MAX_BYTES_TO_CAPTURE /* bytes to capture */, PROMISC_ON /* promisc mode */, READ_TIMEOUT_MS /* timeout */, errbuf);
+  return pcap_open_live(dev->name, MAX_BYTES_TO_CAPTURE, PROMISC_ON, READ_TIMEOUT_MS, errbuf);
 }
 
 #pragma mark sqlite3
@@ -170,8 +163,7 @@ void insert_packet_into_db(harvest *h) {
   CALL_SQLITE(bind_int64(stmt, MSGID_BIND_IDX, h->msg_id));
   CALL_SQLITE(bind_int(stmt, RSSI_BIND_IDX, h->rssi));
   CALL_SQLITE(bind_int(stmt, STNID_BIND_IDX, h->stn_id));
-  
-  //DRS ETH_ALEN
+	
   char *dst;
   char *src;
   char *bssid;
@@ -201,6 +193,8 @@ void insert_packet_into_db(harvest *h) {
   free(bssid);
 }
 
+#pragma mark packet storage functions
+
 void *store_packets() {
   db_handle = open_database();
 
@@ -228,13 +222,16 @@ void *store_packets() {
 #else
 			pthread_yield();
 #endif
+			
     }
   }
   
-  sqlite3_close(db_handle);
+  close_database(db_handle);
   
   return NULL;
 }
+
+#pragma mark packet capture functions
 
 void *capture_process_packets() {
   char errbuf[PCAP_ERRBUF_SIZE];
@@ -246,24 +243,23 @@ void *capture_process_packets() {
   
   unsigned long long packets_captured = 0;
   
-  get_available_interfaces();
-  pcap_if_t *iface = copy_interface(EN0);
-  
-  get_interface_information(iface, &netp, &maskp);
+  int iface_chosen = get_available_interfaces();
+  pcap_if_t *iface = copy_interface(iface_chosen);
   
   pcap_t *capStream = open_device(iface);
   if(capStream != NULL) {
-    printf("opened interface: %s\n", iface->name);
+    printf("\nOpened interface:\t%s\n", iface->name);
   }
+	
+	get_interface_information(iface, &netp, &maskp);
   
   pcap_set_promisc(capStream, PROMISC_ON);
   pcap_set_rfmon(capStream, PROMISC_ON);
   
   get_supported_link_types(capStream);
   
-	unsigned char linkType = DLT_EN10MB;
-
-  pcap_set_datalink(capStream, DLT_IEEE802_11_RADIO);
+	unsigned char linkType = DLT_IEEE802_11_RADIO;
+  pcap_set_datalink(capStream, linkType);
 	
 	// we can only apply the filter if it is wireless
 	if(linkType == DLT_IEEE802_11_RADIO || linkType == DLT_IEEE802_11) {
@@ -347,7 +343,7 @@ void *capture_process_packets() {
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_RATE)) {
         // rate is in 500 kbps
 #ifdef LOGGING
-        printf("Radiotap data rate: %u Mb/s\n", TO_MbPS(rt_data->rate));
+        printf("Radiotap data rate: %u Mb/s\n", TO_MBPS(rt_data->rate));
 #endif
       }
       
@@ -381,20 +377,20 @@ void *capture_process_packets() {
         h->rssi = rt_data->ant_signal;
         
 #ifdef LOGGING
-        printf("Radiotap signal: %i\n", rt_data->ant_signal);
+        printf("Radiotap signal: %i dBm\n", rt_data->ant_signal);
 #endif
       }
       
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DBM_ANTNOISE)) {
 #ifdef LOGGING
-        printf("Radiotap noise: %i\n", rt_data->ant_noise);
+        printf("Radiotap noise: %i dBm\n", rt_data->ant_noise);
 #endif
       }
       
       // adding rh->it_len should get us to the very start of the 802.11 probe request
       /* DRS */
       struct ieee80211_mgmt *wh = (packet + rh->it_len);
-			//ieee80211_h = (struct ieee80211_frame*) &(packet_buffer[sizeof(struct ieee80211_radiotap_header) + 1]);
+			//ieee80211_h = (struct ieee80211_frame*) &(packet[sizeof(struct ieee80211_radiotap_header) + 1]);
       
       for(int i = 0; i < ETH_ALEN; i++) {
         h->bssid[i] = wh->bssid[i];
@@ -476,6 +472,11 @@ void *capture_process_packets() {
 int main(int argc, const char * argv[]) {
   pthread_t store_thread;
   pthread_t capture_thread;
+	
+	if(getuid() != UID_ROOT) {
+		printf("You must be root to run this program.\n");
+		//exit(1);
+	}
   
   pthread_mutex_init(&lock, NULL);
   
@@ -504,7 +505,7 @@ int main(int argc, const char * argv[]) {
   
   pthread_mutex_destroy(&lock);
   
-  sqlite3_close(db_handle);
+  close_database(db_handle);
   free(q);
 
   return 0;
