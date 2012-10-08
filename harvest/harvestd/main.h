@@ -48,6 +48,7 @@
 #define STRUCT_ALIGNED(x)      __attribute__((__aligned__(x)))
 
 node *head = NULL;
+char *db_path = NULL;
 queue *q = NULL;
 sqlite3 *db_handle = NULL;
 pthread_mutex_t lock;

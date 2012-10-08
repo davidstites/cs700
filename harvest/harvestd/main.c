@@ -138,11 +138,17 @@ pcap_t *open_device(pcap_if_t *dev) {
 sqlite3 *open_database() {
   sqlite3 *db_handle = NULL;
   
-  char *path;
-  asprintf(&path, "%s%s%s", getenv("HOME"), "/", DB_NAME);
-  
-  CALL_SQLITE(open(path, &db_handle));
-  free(path);
+	
+	if(db_path != NULL) {
+		CALL_SQLITE(open(db_path, &db_handle));
+	}
+	else {
+		char *path;
+		asprintf(&path, "%s%s%s", getenv("HOME"), "/", DB_NAME);
+		
+		CALL_SQLITE(open(path, &db_handle));
+		free(path);
+	}
   
   // create table if necessary
   sqlite3_exec(db_handle, CREATE_TBL_STMT, NULL, NULL, NULL);
@@ -475,7 +481,16 @@ int main(int argc, const char * argv[]) {
 	
 	if(getuid() != UID_ROOT) {
 		printf("You must be root to run this program.\n");
-		//exit(1);
+		exit(1);
+	}
+	
+	// parse any arguments passed to us
+	for(int i = 0; i < argc; i++) {
+		if(strcmp(argv[i], "-f")) {
+			int len = strlen(argv[i + 1]);
+			db_path = (char *)malloc(sizeof(char) * len);
+			strncpy(db_path, argv[i + 1], len);
+		}
 	}
   
   pthread_mutex_init(&lock, NULL);
