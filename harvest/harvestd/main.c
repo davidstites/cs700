@@ -296,10 +296,12 @@ void *capture_process_packets() {
 		}
 	}
   
+  printf("\Starting capture...\n\n");
+  
   while(TRUE){
     if ((packet = pcap_next(capStream, &pkthdr)) == NULL) {
       // most likely due to capture timeout
-      fprintf(stderr, "Capture timeout: no packets received.\n");
+      printf("Capture timeout: no packets received.\n");
     }
     else {
       harvest *h = (harvest *)malloc(sizeof(harvest));
@@ -578,7 +580,7 @@ int main(int argc, const char * argv[]) {
       }
       
       prechosen_iface = (char *)malloc(sizeof(char) * len + 1); /* don't forget the NULL byte */
-			strncpy(prechosen_iface, argv[i + 1], len); 
+			strncpy(prechosen_iface, argv[i + 1], len);
       prechosen_iface[len] = '\0'; // add on the null byte
 
       printf("Using pre-chosen interface: %s.\n", prechosen_iface);
