@@ -296,7 +296,7 @@ void *capture_process_packets() {
 		}
 	}
   
-  printf("\Starting capture...\n\n");
+  printf("\nStarting capture...\n\n");
   
   while(TRUE){
     if ((packet = pcap_next(capStream, &pkthdr)) == NULL) {
