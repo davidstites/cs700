@@ -42,21 +42,21 @@ void get_interface_information(pcap_if_t *iface, bpf_u_int32 *netp, bpf_u_int32 
   }
   
   if(pcap_lookupnet(iface->name, netp, maskp, errbuf) == -1) {
-    printf("%s\n", errbuf);
-    exit(1);
+    printf("No interface information is available.\n");
   }
-  
-  // get the network address in a human readable form
-  addr.s_addr = *netp;
-  net = inet_ntoa(addr);
-  
-  printf("Network:\t%s\n", net);
-
-  // do the same as above for the device's mask
-  addr.s_addr = *maskp;
-  mask = inet_ntoa(addr);
-  
-  printf("Mask:\t%s\n", mask);
+  else {
+    // get the network address in a human readable form
+    addr.s_addr = *netp;
+    net = inet_ntoa(addr);
+    
+    printf("Network:\t%s\n", net);
+    
+    // do the same as above for the device's mask
+    addr.s_addr = *maskp;
+    mask = inet_ntoa(addr);
+    
+    printf("Mask:\t%s\n", mask);
+  }
 }
 
 int get_available_interfaces() {
@@ -106,7 +106,7 @@ pcap_if_t *copy_interface(int iface_chosen) {
         iface->next = NULL;
         
         iface->name = (char *)malloc(sizeof(char) * (strlen(cur_iface->name) + 1 /* dont forget the null byte */));
-        strncpy(iface->name, cur_iface->name, strlen(cur_iface->name));
+        strncpy(iface->name, cur_iface->name, strlen(cur_iface->name) + 1);
         
         iface->addresses = (pcap_addr_t *)malloc(sizeof(pcap_addr_t));
         memcpy(iface->addresses, cur_iface->addresses, sizeof(pcap_addr_t));
@@ -243,7 +243,6 @@ void *store_packets() {
 #pragma mark packet capture functions
 
 void *capture_process_packets() {
-  char errbuf[PCAP_ERRBUF_SIZE];
   bpf_u_int32 netp = 0;
   bpf_u_int32 maskp = 0;
   struct bpf_program filter;          /* Place to store the BPF filter program  */
@@ -297,7 +296,7 @@ void *capture_process_packets() {
   while(TRUE){
     if ((packet = pcap_next(capStream, &pkthdr)) == NULL) {
       // most likely due to capture timeout
-      fprintf(stderr, "ERROR: Error getting the packet (%s).\n", errbuf);
+      fprintf(stderr, "Capture timeout: no packets received.\n");
     }
     else {
       harvest *h = (harvest *)malloc(sizeof(harvest));
@@ -352,6 +351,14 @@ void *capture_process_packets() {
         printf("Radiotap Timestamp: %llu\n", rt_data->tsft);
 #endif
       }
+      else {
+        // the radiotap header didn't include a timestamp
+        h->timestamp = time(NULL);
+        
+#ifdef LOGGING
+        printf("Radiotap Timestamp (UNIX): %llu\n", h->timestamp);
+#endif
+      }
       
 #ifdef LOGGING
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_RATE)) {
@@ -360,14 +367,12 @@ void *capture_process_packets() {
       }
 #endif
       
+#ifdef LOGGING
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_CHANNEL)) {
         // shift off the size of a radiotap header and you should be at the beginning
         // of your radiotap data
-#ifdef LOGGING
         printf("Radiotap channel: %u MHz, ", rt_data->chan_freq);
-#endif
         
-#ifdef LOGGING
         if(rt_data->chan_flags & IEEE80211_CHAN_2GHZ) {
           printf("2 GHz band\n");
         }
@@ -378,8 +383,8 @@ void *capture_process_packets() {
         if(rt_data->chan_flags & IEEE80211_CHAN_PASSIVE) {
           printf("Radiotap channel: passive\n");
         }
-#endif
       }
+#endif
       
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DBM_ANTSIGNAL)) {
         h->rssi = rt_data->ant_signal;

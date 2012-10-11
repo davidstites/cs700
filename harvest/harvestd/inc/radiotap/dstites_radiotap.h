@@ -23,11 +23,11 @@ struct ieee80211_radiotap_data {
   int8_t                                  ant_noise;
   
   /* DRS */
-  u_int8_t                                hop_set;
+  /* u_int8_t                                hop_set;
   u_int8_t                                hop_pattern;
   u_int16_t                               lock;
   u_int16_t                               tx_atten;
-  u_int16_t                               tx_db_atten;
+  u_int16_t                               tx_db_atten;*/
 } STRUCT_PACKED;
 
 /* DRS */
