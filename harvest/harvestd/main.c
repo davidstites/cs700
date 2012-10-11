@@ -189,13 +189,16 @@ void insert_packet_into_db(harvest *h) {
   if(h->ssid != NULL && (strlen(h->ssid) > 0) && (strlen(h->ssid) <= MAX_SSID_LEN)) {
     asprintf(&ssid, "%s", h->ssid);
     CALL_SQLITE(bind_text(stmt, SSID_BIND_IDX, ssid, strlen(ssid), SQLITE_STATIC));
-    free(ssid);
   }
   else {
     CALL_SQLITE(bind_text(stmt, SSID_BIND_IDX, "", 0, SQLITE_STATIC));
   }
   
   CALL_SQLITE_EXPECT(step(stmt), DONE);
+  
+  if(h->ssid != NULL && (strlen(h->ssid) > 0) && (strlen(h->ssid) <= MAX_SSID_LEN)) {
+    free(ssid);
+  }
   
   free(dst);
   free(src);
@@ -543,8 +546,10 @@ int main(int argc, const char * argv[]) {
         exit(1);
       }
       
-			db_path = (char *)malloc(sizeof(char) * len);
+			db_path = (char *)malloc(sizeof(char) * len + 1); /* don't forget the NULL byte */
 			strncpy(db_path, argv[i + 1], len);
+      db_path[len] = '\0'; // add on the null byte
+      
       printf("Overriding default database path: %s.\n", db_path);
 		}
     else if(strcmp(argv[i], "-i") == 0) {
