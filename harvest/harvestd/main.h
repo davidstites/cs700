@@ -15,8 +15,8 @@
 #include <unistd.h>
 #include <errno.h>
 #include <sys/types.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
+#include <ifaddrs.h>
+#include <net/if_dl.h>
 #include <arpa/inet.h>
 #include <sqlite3.h>
 
@@ -29,10 +29,19 @@
 
 #define UID_ROOT 0
 
+#ifdef __APPLE__
+#define EN0 "en0"
+#else
+#define EN0 "eth0"
+#endif
+
 //#define LOGGING 1
 
 #define FALSE 0
 #define TRUE 1
+
+#define MAX_SIGNED_CHAR 0x7F
+#define UNKNOWN_STATION_ID 0
 
 #define MAX_BYTES_TO_CAPTURE 2048
 
@@ -47,6 +56,10 @@
 #define STRUCT_PACKED          __attribute__((__packed__))
 #define STRUCT_ALIGNED(x)      __attribute__((__aligned__(x)))
 
+
+/* global vars */
+
+u_int8_t station_id = UNKNOWN_STATION_ID;
 node *head = NULL;
 char *db_path = NULL;
 queue *q = NULL;
@@ -57,17 +70,22 @@ pthread_mutex_t lock;
 
 #define TIMESTAMP_BIND_IDX 1
 #define TYPE_BIND_IDX 2
-#define MSGID_BIND_IDX 3
-#define RSSI_BIND_IDX 4
-#define STNID_BIND_IDX 5
-#define DST_BIND_IDX 6
-#define SRC_BIND_IDX 7
-#define BSSID_BIND_IDX 8
-#define SSID_BIND_IDX 9
+#define RSSI_BIND_IDX 3
+#define STNID_BIND_IDX 4
+#define DST_BIND_IDX 5
+#define SRC_BIND_IDX 6
+#define BSSID_BIND_IDX 7
+#define SSID_BIND_IDX 8
 
-const char *CREATE_TBL_STMT = "CREATE TABLE IF NOT EXISTS packets (id INTEGER PRIMARY KEY, timestamp INTEGER NOT NULL, type INTEGER NOT NULL, msg_id INTEGER NOT NULL, rssi INTEGER NOT NULL, stn_id INTEGER NOT NULL, dst TEXT NOT NULL, src TEXT NOT NULL, bssid TEXT NOT NULL, SSID TEXT)";
+enum MessageType {
+  PROBE_REQ,
+  PROBE_RESP,
+  BEACON
+};
 
-const char *INSERT_ROW_STMT = "INSERT INTO packets (timestamp, type, msg_id, rssi, stn_id, dst, src, bssid, ssid) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+const char *CREATE_TBL_STMT = "CREATE TABLE IF NOT EXISTS packets (id INTEGER PRIMARY KEY, timestamp INTEGER NOT NULL, type INTEGER NOT NULL, rssi INTEGER NOT NULL, stn_id INTEGER NOT NULL, dst TEXT NOT NULL, src TEXT NOT NULL, bssid TEXT NOT NULL, SSID TEXT)";
+
+const char *INSERT_ROW_STMT = "INSERT INTO packets (timestamp, type, rssi, stn_id, dst, src, bssid, ssid) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
 const char *PROBE_REQ_FILTER = "wlan subtype probe-req";
 

@@ -166,7 +166,6 @@ void insert_packet_into_db(harvest *h) {
   
   CALL_SQLITE(bind_int64(stmt, TIMESTAMP_BIND_IDX, h->timestamp));
   CALL_SQLITE(bind_int(stmt, TYPE_BIND_IDX, h->msg_type));
-  CALL_SQLITE(bind_int64(stmt, MSGID_BIND_IDX, h->msg_id));
   CALL_SQLITE(bind_int(stmt, RSSI_BIND_IDX, h->rssi));
   CALL_SQLITE(bind_int(stmt, STNID_BIND_IDX, h->stn_id));
 	
@@ -214,8 +213,8 @@ void *store_packets() {
       q->count--;
       
 #ifdef LOGGING
-      printf("queue count (REMOVE): %i\n", q->count);
-      printf ("row id was %d\n", (int)sqlite3_last_insert_rowid (db_handle));
+      printf("Packet queue count (remove): %i\n", q->count);
+      printf ("Primary row id was %d\n", (int)sqlite3_last_insert_rowid (db_handle));
 #endif
       
       pthread_mutex_unlock(&lock);
@@ -291,15 +290,8 @@ void *capture_process_packets() {
       harvest *h = (harvest *)malloc(sizeof(harvest));
       memset(h, 0, sizeof(harvest));
       
-#ifdef __APPLE__
-      h->msg_id = arc4random();
-#else
-			srand((unsigned)time(NULL));
-			h->msg_id = rand() % sizeof(int);
-#endif
-      
-      h->msg_type = 0;
-      h->stn_id = 0;
+      h->msg_type = PROBE_REQ;
+      h->stn_id = station_id;
       
       struct ieee80211_radiotap_header *rh = (struct ieee80211_radiotap_header *)packet;
       
@@ -327,9 +319,11 @@ void *capture_process_packets() {
       // numbers for the it_present bitmask are defined).
       // data is specified in little endian byte-order
       
+#ifdef LOGGING
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_EXT)) {
         printf("more headers are available\n");
       }
+#endif
       
       /* DRS */
       //struct ieee80211_radiotap_data *rt_data = (struct ieee80211_radiotap_data *)((struct ieee80211_radiotap_header *)rh + 1);
@@ -346,12 +340,12 @@ void *capture_process_packets() {
 #endif
       }
       
+#ifdef LOGGING
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_RATE)) {
         // rate is in 500 kbps
-#ifdef LOGGING
         printf("Radiotap data rate: %u Mb/s\n", TO_MBPS(rt_data->rate));
-#endif
       }
+#endif
       
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_CHANNEL)) {
         // shift off the size of a radiotap header and you should be at the beginning
@@ -360,23 +354,18 @@ void *capture_process_packets() {
         printf("Radiotap channel: %u MHz, ", rt_data->chan_freq);
 #endif
         
-        if(rt_data->chan_flags & IEEE80211_CHAN_2GHZ) {
 #ifdef LOGGING
+        if(rt_data->chan_flags & IEEE80211_CHAN_2GHZ) {
           printf("2 GHz band\n");
-#endif
         }
         else if(rt_data->chan_flags & IEEE80211_CHAN_5GHZ) {
-#ifdef LOGGING
           printf("5 GHz band\n");
-#endif
         }
         
-        /* DRS */
         if(rt_data->chan_flags & IEEE80211_CHAN_PASSIVE) {
-#ifdef LOGGING
           printf("Radiotap channel: passive\n");
-#endif
         }
+#endif
       }
       
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DBM_ANTSIGNAL)) {
@@ -387,11 +376,11 @@ void *capture_process_packets() {
 #endif
       }
       
-      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DBM_ANTNOISE)) {
 #ifdef LOGGING
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DBM_ANTNOISE)) {
         printf("Radiotap noise: %i dBm\n", rt_data->ant_noise);
-#endif
       }
+#endif
       
       // adding rh->it_len should get us to the very start of the 802.11 probe request
       /* DRS */
@@ -458,7 +447,7 @@ void *capture_process_packets() {
       
 #ifdef LOGGING
       packets_captured++;
-      printf("packets captured: %llu, queue count (INSERT): %i\n", packets_captured, q->count);
+      printf("Packets captured thus far: %llu, \nPacket queue count (insert): %i\n", packets_captured, q->count);
 #endif
     }
   }
@@ -481,17 +470,63 @@ int main(int argc, const char * argv[]) {
 	
 	if(getuid() != UID_ROOT) {
 		printf("You must be root to run this program.\n");
-		exit(1);
+		//exit(1);
 	}
+  
+  struct ifaddrs *ifaces;
+  struct ifaddrs *cur = NULL;
+  if(getifaddrs(&ifaces) == 0) {
+    cur = ifaces;
+    
+    while(cur->ifa_next != NULL) {
+      if((strcmp(cur->ifa_name, EN0) == 0) && (cur->ifa_addr->sa_family == AF_LINK)) {
+        const struct sockaddr_dl *dlAddr = (const struct sockaddr_dl *) cur->ifa_addr;
+        const unsigned char *base = (const unsigned char *) &dlAddr->sdl_data[dlAddr->sdl_nlen];
+        station_id = (u_int8_t)(base + 5);
+        
+        break;
+      }
+      cur = cur->ifa_next;
+    }
+    
+    freeifaddrs(ifaces);
+  }
+  else {
+    station_id = UNKNOWN_STATION_ID;
+  }
 	
-	// parse any arguments passed to us
+	// parse any arguments passed to harvestd
 	for(int i = 0; i < argc; i++) {
-		if(strcmp(argv[i], "-f")) {
+		if(strcmp(argv[i], "-f") == 0) {
 			int len = strlen(argv[i + 1]);
+      if(len < 1) {
+        printf("You must enter a file path.\n");
+        exit(1);
+      }
+      
 			db_path = (char *)malloc(sizeof(char) * len);
 			strncpy(db_path, argv[i + 1], len);
 		}
+    else if(strcmp(argv[i], "-i") == 0) {
+			int len = strlen(argv[i + 1]);
+      
+      if(len < 1) {
+        printf("You must enter a station ID.\n");
+        exit(1);
+      }
+      else {
+        u_int8_t id = atoi(argv[i + 1]);
+        if(id < MAX_SIGNED_CHAR) {
+          printf("Station ID must be between 0-255.\n");
+          exit(1);
+        }
+        
+        station_id = id;
+      }
+		}
 	}
+  
+  printf("Using station ID: %i.\n", station_id);
   
   pthread_mutex_init(&lock, NULL);
   

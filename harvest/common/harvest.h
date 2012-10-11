@@ -15,7 +15,6 @@
 #pragma pack(1)
 typedef struct harvest {
   u_int8_t msg_type; /* 1 byte */
-  unsigned long long msg_id; /* 4 bytes */
   unsigned long long timestamp; /* 4 bytes */
   u_int8_t src[6]; /* 1 bytes x 6 = 6 bytes */
   u_int8_t dst[6]; /* 1 bytes x 6 = 6 bytes */
