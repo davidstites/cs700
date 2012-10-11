@@ -16,9 +16,16 @@
 #include <errno.h>
 #include <sys/types.h>
 #include <ifaddrs.h>
-#include <net/if_dl.h>
 #include <arpa/inet.h>
 #include <sqlite3.h>
+
+#ifdef AF_LINK
+#include <net/if_dl.h>
+#endif
+
+#ifdef AF_PACKET
+#include <netpacket/packet.h>
+#endif
 
 #include "list.h"
 #include "dstites_sqlite.h"
@@ -38,6 +45,7 @@
 //#define LOGGING 1
 
 #define QUIT -1
+#define PRECHOSEN -1
 
 #define FALSE 0
 #define TRUE 1

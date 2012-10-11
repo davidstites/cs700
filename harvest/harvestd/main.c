@@ -261,7 +261,7 @@ void *capture_process_packets() {
     iface = copy_interface(iface_chosen);
   }
   else {
-    iface = copy_interface(prechosen_iface);
+    iface = copy_interface(PRECHOSEN);
   }
   
   pcap_t *capStream = open_device(iface);
@@ -491,7 +491,7 @@ int main(int argc, const char * argv[]) {
 	
 	if(getuid() != UID_ROOT) {
 		printf("You must be root to run this program.\n");
-		//exit(1);
+		exit(1);
 	}
   
   struct ifaddrs *ifaces;
@@ -500,13 +500,26 @@ int main(int argc, const char * argv[]) {
     cur = ifaces;
     
     while(cur->ifa_next != NULL) {
+#ifdef AF_LINK
       if((strcmp(cur->ifa_name, EN0) == 0) && (cur->ifa_addr->sa_family == AF_LINK)) {
-        const struct sockaddr_dl *dlAddr = (const struct sockaddr_dl *) cur->ifa_addr;
-        const unsigned char *base = (const unsigned char *) &dlAddr->sdl_data[dlAddr->sdl_nlen];
-        station_id = (u_int8_t)(base + 5);
+        const struct sockaddr_dl *dlAddr = (const struct sockaddr_dl *)cur->ifa_addr;
+        const unsigned char *base = (const unsigned char *)&dlAddr->sdl_data[dlAddr->sdl_nlen];
+        station_id = (u_int8_t)(base + (ETH_ALEN - 1));
         
         break;
       }
+#endif
+      
+#ifdef AF_PACKET
+      if((strcmp(cur->ifa_name, EN0) == 0) && (cur->ifa_addr->sa_family == AF_PACKET)) {
+        struct sockaddr_ll *sl = (struct sockaddr_ll*)cur->ifa_addr;
+        const unsigned char *base = (const unsigned char *)sl->sll_addr;
+        station_id = (u_int8_t)base[(ETH_ALEN - 1)];
+        
+        break;
+      }
+#endif
+      
       cur = cur->ifa_next;
     }
     
