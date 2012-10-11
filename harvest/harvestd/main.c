@@ -577,8 +577,10 @@ int main(int argc, const char * argv[]) {
         exit(1);
       }
       
-      prechosen_iface = (char *)malloc(sizeof(char) * len);
-			strncpy(prechosen_iface, argv[i + 1], len);
+      prechosen_iface = (char *)malloc(sizeof(char) * len + 1); /* don't forget the NULL byte */
+			strncpy(prechosen_iface, argv[i + 1], len); 
+      prechosen_iface[len] = '\0'; // add on the null byte
+
       printf("Using pre-chosen interface: %s.\n", prechosen_iface);
 		}
 	}
