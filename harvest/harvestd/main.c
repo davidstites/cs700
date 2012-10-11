@@ -527,6 +527,7 @@ int main(int argc, const char * argv[]) {
       
 			db_path = (char *)malloc(sizeof(char) * len);
 			strncpy(db_path, argv[i + 1], len);
+      printf("Overriding default database path: %s.\n", db_path);
 		}
     else if(strcmp(argv[i], "-i") == 0) {
 			int len = strlen(argv[i + 1]);
@@ -555,6 +556,7 @@ int main(int argc, const char * argv[]) {
       
       prechosen_iface = (char *)malloc(sizeof(char) * len);
 			strncpy(prechosen_iface, argv[i + 1], len);
+      printf("Using pre-chosen interface: %s.\n", prechosen_iface);
 		}
 	}
   
