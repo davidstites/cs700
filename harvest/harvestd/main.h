@@ -79,6 +79,7 @@ pthread_mutex_t lock;
 #define BSSID_BIND_IDX 7
 #define SSID_BIND_IDX 8
 
+/* DRS */
 enum MessageType {
   PROBE_REQ,
   PROBE_RESP,
