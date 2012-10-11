@@ -37,6 +37,10 @@ void get_interface_information(pcap_if_t *iface, bpf_u_int32 *netp, bpf_u_int32 
   struct in_addr addr;
   
   // ask pcap for the network address and mask of the device
+  if(iface == NULL) {
+    return;
+  }
+  
   if(pcap_lookupnet(iface->name, netp, maskp, errbuf) == -1) {
     printf("%s\n", errbuf);
     exit(1);
@@ -60,7 +64,7 @@ int get_available_interfaces() {
   pcap_if_t *devlist = NULL;
   
 	int i = 0;
-  printf("Interfaces available: \n\n");
+  printf("Interfaces available: (-1 to exit)\n\n");
 
   /* get a list of all the devices that we can open */
   if(pcap_findalldevs(&devlist, errbuf) != -1) {
@@ -81,7 +85,7 @@ int get_available_interfaces() {
 	do {
 		printf("Choose an interface: ");
 		scanf("%d", &iface_chosen);
-	} while ((iface_chosen < 0) || (iface_chosen > (i - 1)));
+	} while ((iface_chosen < QUIT) || (iface_chosen > (i - 1)));
 	
 	return iface_chosen;
 }
@@ -249,6 +253,10 @@ void *capture_process_packets() {
   unsigned long long packets_captured = 0;
   
   int iface_chosen = get_available_interfaces();
+  if(iface_chosen == QUIT){
+    exit(0);
+  }
+  
   pcap_if_t *iface = copy_interface(iface_chosen);
   
   pcap_t *capStream = open_device(iface);
@@ -470,7 +478,7 @@ int main(int argc, const char * argv[]) {
 	
 	if(getuid() != UID_ROOT) {
 		printf("You must be root to run this program.\n");
-		//exit(1);
+		exit(1);
 	}
   
   struct ifaddrs *ifaces;

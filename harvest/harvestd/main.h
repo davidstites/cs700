@@ -37,6 +37,8 @@
 
 //#define LOGGING 1
 
+#define QUIT -1
+
 #define FALSE 0
 #define TRUE 1
 
