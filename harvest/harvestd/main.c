@@ -99,7 +99,7 @@ pcap_if_t *copy_interface(int iface_chosen) {
   if(pcap_findalldevs(&devlist, errbuf) != -1) {
     pcap_if_t *cur_iface = devlist;
     while(cur_iface->next != NULL) {
-      if(i == iface_chosen) {
+      if(i == iface_chosen || ((prechosen_iface != NULL) && (strcmp(cur_iface->name, prechosen_iface) == 0))) {
         pcap_if_t *iface = (pcap_if_t *)malloc(sizeof(pcap_if_t));
 				memset(iface, 0, sizeof(pcap_if_t));
         
@@ -252,12 +252,17 @@ void *capture_process_packets() {
   
   unsigned long long packets_captured = 0;
   
-  int iface_chosen = get_available_interfaces();
-  if(iface_chosen == QUIT){
-    exit(0);
+  pcap_if_t *iface;
+  if(prechosen_iface == NULL) {
+    int iface_chosen = get_available_interfaces();
+    if(iface_chosen == QUIT){
+      exit(0);
+    }
+    iface = copy_interface(iface_chosen);
   }
-  
-  pcap_if_t *iface = copy_interface(iface_chosen);
+  else {
+    iface = copy_interface(prechosen_iface);
+  }
   
   pcap_t *capStream = open_device(iface);
   if(capStream != NULL) {
@@ -463,6 +468,14 @@ void *capture_process_packets() {
   // this should never be reached
   free(iface);
   
+  if(db_path != NULL) {
+    free(db_path);
+  }
+  
+  if(prechosen_iface != NULL) {
+    free(prechosen_iface);
+  }
+  
   while(q->head->next != NULL) {
     node *prev = q->head;
     q->head = q->head->next;
@@ -478,7 +491,7 @@ int main(int argc, const char * argv[]) {
 	
 	if(getuid() != UID_ROOT) {
 		printf("You must be root to run this program.\n");
-		exit(1);
+		//exit(1);
 	}
   
   struct ifaddrs *ifaces;
@@ -531,6 +544,17 @@ int main(int argc, const char * argv[]) {
         
         station_id = id;
       }
+		}
+    else if(strcmp(argv[i], "-n") == 0) {
+      int len = strlen(argv[i + 1]);
+      
+      if(len < 1) {
+        printf("You must enter an interface name.\n");
+        exit(1);
+      }
+      
+      prechosen_iface = (char *)malloc(sizeof(char) * len);
+			strncpy(prechosen_iface, argv[i + 1], len);
 		}
 	}
   

@@ -61,6 +61,7 @@
 
 /* global vars */
 
+char *prechosen_iface = NULL;
 u_int8_t station_id = UNKNOWN_STATION_ID;
 node *head = NULL;
 char *db_path = NULL;
