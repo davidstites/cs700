@@ -7,33 +7,40 @@ sudo apt-get install build-essential openssl libssl-dev git subversion flex biso
 sudo wget http://goo.gl/1BOfJ -O /usr/bin/rpi-update && sudo chmod +x /usr/bin/rpi-update
 sudo /usr/bin/rpi-update
 
-# get libpcap and tcpdump
-wget http://www.tcpdump.org/release/libpcap-1.2.1.tar.gz
-wget http://www.tcpdump.org/release/tcpdump-4.1.1.tar.gz
-wget http://download.aircrack-ng.org/aircrack-ng-1.1.tar.gz
-
-# build and install libpcap
-tar -zxvf libpcap-1.2.1.tar.gz
-rm libpcap-1.2.1.tar.gz
-cd libpcap-1.2.1
-./configure
-make
+# install libpcap
+tar -zxvf libpcap-1.2.1-arm6vl.tar.gz
+rm libpcap-1.2.1-arm6vl.tar.gz
+cd libpcap-1.2.1-arm6vl
 sudo make install
 cd ~
 
-# build and install tcpdump
-tar -zxvf tcpdump-4.1.1.tar.gz
-rm tcpdump-4.1.1.tar.gz
-cd tcpdump-4.1.1
-./configure
-make
+# install tcpdump
+tar -zxvf tcpdump-4.3.1-arm6vl.tar.gz
+rm tcpdump-4.3.1-arm6vl.tar.gz
+cd tcpdump-4.3.1-arm6vl
 sudo make install
 cd ~
 
-# build and install aircrack suite
-tar -zxvf aircrack-ng-1.1.tar.gz
-rm aircrack-ng-1.1.tar.gz
-cd aircrack-ng-1.1
-make
+# install aircrack suite
+tar -zxvf aircrack-ng-1.1-arm6vl.tar.gz
+rm aircrack-ng-1.1-arm6vl.tar.gz
+cd aircrack-ng-1.1-arm6vl
 sudo make install
 cd ~
+sudo airodump-ng-oui-update
+
+tar -zxvf cs700.tar.gz
+rm cs700.tar.gz
+cd cs700/harvest/harvestd
+
+make
+sudo make install
+sudo chmod +x /usr/bin/harvestd
+
+cd ../../
+
+sudo cp harvestd.sh /etc/init.d/harvestd
+sudo chmod 755 /etc/init.d/harvestd
+sudo update-rc.d -f harvestd defaults
+
+exit 0

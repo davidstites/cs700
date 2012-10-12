@@ -18,3 +18,6 @@ harvestd:  $(H_SOURCE:.c=.o)
 
 clean:
 	rm -rf *.o harvestd $(COMMON)/*.o
+
+install: harvestd
+	sudo cp harvestd /usr/bin
