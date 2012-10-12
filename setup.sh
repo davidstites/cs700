@@ -44,3 +44,16 @@ sudo chmod 755 /etc/init.d/harvestd
 sudo update-rc.d -f harvestd defaults
 
 exit 0
+
+#change passwd from raspberry
+
+# cat to /etc/network/interfaces
+#auto lo
+#iface lo inet loopback
+#iface eth0 inet dhcp
+#allow-hotplug wlan0
+#auto wlan0
+#iface wlan0 inet dhcp
+#wireless-essid  AppleWiFi
+#wpa-roam /etc/wpa_supplicant/wpa_supplicant.conf
+#iface default inet dhcp
