@@ -1,4 +1,12 @@
 #!/bin/bash
+### BEGIN INIT INFO
+# Provides:          harvestd 
+# Required-Start:    $remote_fs $syslog
+# Required-Stop:     $remote_fs $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop: 
+# Short-Description:       IEEE 802.11 Packet Harvester
+### END INIT INFO
 
 # always run this
 echo "Starting harvestd"
