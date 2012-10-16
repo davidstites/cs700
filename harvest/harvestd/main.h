@@ -1,6 +1,6 @@
 //
 //  main.h
-//  harvest
+//  harvestd
 //
 //  Created by David R. Stites on 9/21/12.
 //

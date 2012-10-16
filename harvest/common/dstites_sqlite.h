@@ -1,6 +1,6 @@
 //
 //  dstites_sqlite.h
-//  harvest
+//  harvestd
 //
 //  Created by David R. Stites on 9/26/12.
 //

@@ -1,6 +1,6 @@
 //
-//  main.m
-//  harvest
+//  main.c
+//  harvestd
 //
 //  Created by David R. Stites on 9/18/12.
 //
@@ -203,6 +203,8 @@ void insert_packet_into_db(harvest *h) {
   free(dst);
   free(src);
   free(bssid);
+  
+  CALL_SQLITE(finalize(stmt));
 }
 
 #pragma mark packet storage functions
@@ -296,6 +298,8 @@ void *capture_process_packets() {
 		}
 	}
   
+  free(iface);
+  
   printf("\nStarting capture...\n\n");
   
   while(TRUE){
@@ -347,24 +351,13 @@ void *capture_process_packets() {
 			// the memory as a struct so we have to walk it individually and shift off the bytes
       unsigned char *rt_data = ((u_int8_t*)rh) + sizeof(struct ieee80211_radiotap_header);
       
+      h->timestamp = time(NULL);
+      
+#ifdef LOGGING
+      printf("Timestamp: %llu\n", h->timestamp);
+#endif
 			if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_TSFT)) {
-        // shift off the size of a radiotap header and you should be at the beginning
-        // of your radiotap data
-        
-        h->timestamp = *((u_int64_t *)rt_data);
 				rt_data += sizeof(u_int64_t);
-        
-#ifdef LOGGING
-        printf("Radiotap Timestamp: %llu\n", h->timestamp);
-#endif
-      }
-      else {
-        // the radiotap header didn't include a timestamp
-        h->timestamp = time(NULL);
-        
-#ifdef LOGGING
-        printf("Radiotap Timestamp (UNIX): %llu\n", h->timestamp);
-#endif
       }
 			
 			if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_FLAGS)) {
@@ -382,10 +375,7 @@ void *capture_process_packets() {
       }
 
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_CHANNEL)) {
-        // shift off the size of a radiotap header and you should be at the beginning
-        // of your radiotap data
-				
-				u_int16_t chan_freq = *((u_int16_t *)rt_data);
+        u_int16_t chan_freq = *((u_int16_t *)rt_data);
 				rt_data += sizeof(u_int16_t);
 				
 				u_int16_t chan_flags = *((u_int16_t *)rt_data);
@@ -408,10 +398,10 @@ void *capture_process_packets() {
       }
 			
 			if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_FHSS)) {
-				u_int8_t hop_set = *((u_int8_t *)rt_data);
+				//u_int8_t hop_set = *((u_int8_t *)rt_data);
 				rt_data += sizeof(u_int8_t);
 				
-				u_int8_t hop_pattern = *((u_int8_t *)rt_data);
+				//u_int8_t hop_pattern = *((u_int8_t *)rt_data);
 				rt_data += sizeof(u_int8_t);
 			}
 
@@ -432,11 +422,74 @@ void *capture_process_packets() {
         printf("Radiotap noise: %i dBm\n", ant_noise);
 #endif
       }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_LOCK_QUALITY)) {
+        //u_int16_t lock = *((u_int16_t *)rt_data);
+				rt_data += sizeof(u_int16_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_TX_ATTENUATION)) {
+        //u_int16_t tx_atten = *((u_int16_t *)rt_data);
+				rt_data += sizeof(u_int16_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DB_TX_ATTENUATION)) {
+        //u_int16_t tx_atten = *((u_int16_t *)rt_data);
+				rt_data += sizeof(u_int16_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DBM_TX_POWER)) {
+        //int8_t tx_power = *((int8_t *)rt_data);
+				rt_data += sizeof(int8_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_ANTENNA)) {
+        //u_int8_t antenna = *((u_int8_t *)rt_data);
+				rt_data += sizeof(u_int8_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DB_ANTSIGNAL)) {
+        //u_int8_t antenna = *((u_int8_t *)rt_data);
+				rt_data += sizeof(u_int8_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DB_ANTNOISE)) {
+        //u_int8_t antenna = *((u_int8_t *)rt_data);
+				rt_data += sizeof(u_int8_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_RX_FLAGS)) {
+        //u_int16_t rx_flags = *((u_int16_t *)rt_data);
+				rt_data += sizeof(u_int16_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_TX_FLAGS)) {
+        //u_int16_t tx_flags = *((u_int16_t *)rt_data);
+				rt_data += sizeof(u_int16_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_RTS_RETRIES)) {
+        //u_int8_t rts = *((u_int8_t *)rt_data);
+				rt_data += sizeof(u_int8_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DATA_RETRIES)) {
+        //u_int8_t retries = *((u_int8_t *)rt_data);
+				rt_data += sizeof(u_int8_t);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_MCS)) {
+        //u_int16_t mcs = *((u_int16_t *)rt_data);
+				rt_data += (sizeof(u_int16_t) * 3);
+      }
+      
+      if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_AMPDU_STATUS)) {
+        //u_int64_t ampdu = *((u_int64_t *)rt_data);
+				rt_data += (sizeof(u_int32_t) + sizeof(u_int16_t) + sizeof(u_int8_t) + sizeof(u_int8_t));
+      }
 
-      // adding rh->it_len should get us to the very start of the 802.11 probe request
-      /* DRS */
-      struct ieee80211_mgmt *wh = (packet + rh->it_len);
-			//ieee80211_h = (struct ieee80211_frame*) &(packet[sizeof(struct ieee80211_radiotap_header) + 1]);
+      // adding rh->it_len should get us to the very start of the 802.11 probe request management data
+      struct ieee80211_mgmt *wh = (struct ieee80211_mgmt *)((u_int8_t *)(packet + rh->it_len));
       
       for(int i = 0; i < ETH_ALEN; i++) {
         h->bssid[i] = wh->bssid[i];
@@ -468,7 +521,7 @@ void *capture_process_packets() {
         printf("SSID: ");
 #endif
         
-        // DRS copy over the length of the SSID
+        // copy over the length of the SSID
         if(len <= MAX_SSID_LEN) {
           strncpy(h->ssid, (const char *)tag, len);
           // add on the null byte
@@ -504,8 +557,6 @@ void *capture_process_packets() {
   }
   
   // this should never be reached
-  free(iface);
-  
   if(db_path != NULL) {
     free(db_path);
   }
@@ -529,7 +580,7 @@ int main(int argc, const char * argv[]) {
 	
 	if(getuid() != UID_ROOT) {
 		printf("You must be root to run this program.\n");
-		//exit(1);
+		exit(1);
 	}
   
   struct ifaddrs *ifaces;
