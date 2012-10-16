@@ -342,18 +342,20 @@ void *capture_process_packets() {
       }
 #endif
       
-      /* DRS */
-      //struct ieee80211_radiotap_data *rt_data = (struct ieee80211_radiotap_data *)((struct ieee80211_radiotap_header *)rh + 1);
-      struct ieee80211_radiotap_data *rt_data = ((u_int8_t*)rh) + sizeof(struct ieee80211_radiotap_header);
+			// unfortunately, to save bits, if the field is not present in the it_present bitfield
+			// then it isn't included in the data blob following the header and we cannot cast
+			// the memory as a struct so we have to walk it individually and shift off the bytes
+      unsigned char *rt_data = ((u_int8_t*)rh) + sizeof(struct ieee80211_radiotap_header);
       
 			if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_TSFT)) {
         // shift off the size of a radiotap header and you should be at the beginning
         // of your radiotap data
         
-        h->timestamp = rt_data->tsft;
+        h->timestamp = *((u_int64_t *)rt_data);
+				rt_data += sizeof(u_int64_t);
         
 #ifdef LOGGING
-        printf("Radiotap Timestamp: %llu\n", rt_data->tsft);
+        printf("Radiotap Timestamp: %llu\n", h->timestamp);
 #endif
       }
       else {
@@ -364,47 +366,73 @@ void *capture_process_packets() {
         printf("Radiotap Timestamp (UNIX): %llu\n", h->timestamp);
 #endif
       }
-      
-#ifdef LOGGING
+			
+			if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_FLAGS)) {
+				rt_data += sizeof(u_int8_t);
+			}
+
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_RATE)) {
         // rate is in 500 kbps
-        printf("Radiotap data rate: %u Mb/s\n", TO_MBPS(rt_data->rate));
-      }
-#endif
-      
 #ifdef LOGGING
+				int rate = *((u_int8_t *)rt_data);
+        printf("Radiotap data rate: %u Mb/s\n", TO_MBPS(rate));
+#endif
+				
+				rt_data += sizeof(u_int8_t);
+      }
+
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_CHANNEL)) {
         // shift off the size of a radiotap header and you should be at the beginning
         // of your radiotap data
-        printf("Radiotap channel: %u MHz, ", rt_data->chan_freq);
+				
+				u_int16_t chan_freq = *((u_int16_t *)rt_data);
+				rt_data += sizeof(u_int16_t);
+				
+				u_int16_t chan_flags = *((u_int16_t *)rt_data);
+				rt_data += sizeof(u_int16_t);
+				
+#ifdef LOGGING
+        printf("Radiotap channel: %u MHz, ", chan_freq);
         
-        if(rt_data->chan_flags & IEEE80211_CHAN_2GHZ) {
+        if(chan_flags & IEEE80211_CHAN_2GHZ) {
           printf("2 GHz band\n");
         }
-        else if(rt_data->chan_flags & IEEE80211_CHAN_5GHZ) {
+        else if(chan_flags & IEEE80211_CHAN_5GHZ) {
           printf("5 GHz band\n");
         }
         
-        if(rt_data->chan_flags & IEEE80211_CHAN_PASSIVE) {
+        if(chan_flags & IEEE80211_CHAN_PASSIVE) {
           printf("Radiotap channel: passive\n");
         }
-      }
 #endif
-      
+      }
+			
+			if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_FHSS)) {
+				u_int8_t hop_set = *((u_int8_t *)rt_data);
+				rt_data += sizeof(u_int8_t);
+				
+				u_int8_t hop_pattern = *((u_int8_t *)rt_data);
+				rt_data += sizeof(u_int8_t);
+			}
+
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DBM_ANTSIGNAL)) {
-        h->rssi = rt_data->ant_signal;
+        h->rssi = *((int8_t *)rt_data);
+				rt_data += sizeof(int8_t);
         
 #ifdef LOGGING
-        printf("Radiotap signal: %i dBm\n", rt_data->ant_signal);
+        printf("Radiotap signal: %i dBm\n", h->rssi);
 #endif
       }
-      
-#ifdef LOGGING
+
       if(BIT_SET(rh->it_present, IEEE80211_RADIOTAP_DBM_ANTNOISE)) {
-        printf("Radiotap noise: %i dBm\n", rt_data->ant_noise);
-      }
+				int8_t ant_noise = *((int8_t *)rt_data);
+				rt_data += sizeof(int8_t);
+				
+#ifdef LOGGING
+        printf("Radiotap noise: %i dBm\n", ant_noise);
 #endif
-      
+      }
+
       // adding rh->it_len should get us to the very start of the 802.11 probe request
       /* DRS */
       struct ieee80211_mgmt *wh = (packet + rh->it_len);
@@ -501,7 +529,7 @@ int main(int argc, const char * argv[]) {
 	
 	if(getuid() != UID_ROOT) {
 		printf("You must be root to run this program.\n");
-		exit(1);
+		//exit(1);
 	}
   
   struct ifaddrs *ifaces;

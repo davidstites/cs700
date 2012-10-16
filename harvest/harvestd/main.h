@@ -27,11 +27,13 @@
 #include <netpacket/packet.h>
 #endif
 
+#define STRUCT_PACKED          __attribute__((__packed__))
+#define STRUCT_ALIGNED(x)      __attribute__((__aligned__(x)))
+
 #include "list.h"
 #include "dstites_sqlite.h"
 #include "harvest.h"
 #include "radiotap.h"
-#include "dstites_radiotap.h"
 #include "ieee80211_defs.h"
 
 #define UID_ROOT 0
@@ -62,10 +64,6 @@
 
 #define BIT_SET(var, pos) ((var) & (1 << (pos)))
 #define TO_MBPS(rate) ((rate * 500) / 1000)
-
-#define STRUCT_PACKED          __attribute__((__packed__))
-#define STRUCT_ALIGNED(x)      __attribute__((__aligned__(x)))
-
 
 /* global vars */
 
